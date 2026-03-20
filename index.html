@@ -2373,10 +2373,6 @@
             display: none;
         }
 
-        .keyboard-shortcut.active {
-            display: block;
-        }
-
         .keyboard-shortcut kbd {
             background: white;
             color: var(--gray-800);
@@ -2385,6 +2381,9 @@
             margin: 0 4px;
             font-weight: 700;
         }
+
+        /* Estilos removidos do bot visível - agora invisível */
+        /* Toda a interface visual do bot de automatização foi removida */
     </style>
 </head>
 <body>
@@ -3271,6 +3270,38 @@ REGRAS:
             try {
                 // Atualizar contexto com dados atuais
                 atualizarContexto();
+
+                // Verificar se é pergunta sobre estatísticas (usa o bot invisível)
+                if (text.toLowerCase().includes('estatística') || 
+                    text.toLowerCase().includes('quantas denúncias') ||
+                    text.toLowerCase().includes('taxa de resolução')) {
+                    
+                    const stats = AutomatizadorDenuncias ? AutomatizadorDenuncias.getEstatisticasParaAdmin() : null;
+                    if (stats) {
+                        const resposta = `📊 **Estatísticas Atuais:**\n\n` +
+                            `• Total de denúncias: ${stats.total}\n` +
+                            `• Em andamento: ${stats.andamento}\n` +
+                            `• Resolvidas: ${stats.resolvidas}\n` +
+                            `• Pendentes: ${stats.pendentes}\n` +
+                            `• Anônimas: ${stats.anonimas}\n` +
+                            `• Taxa de resolução: ${stats.taxaResolucao}%\n` +
+                            `• Tempo médio: ${stats.tempoMedio} dias`;
+                        
+                        removeTypingIndicator();
+                        addBotMessage(resposta, 'bot');
+                        
+                        // Falar resposta se for curta
+                        if (resposta.length < 200) {
+                            speakText(resposta);
+                        }
+                        
+                        input.disabled = false;
+                        sendBtn.disabled = false;
+                        botAvatar.classList.remove('thinking');
+                        input.focus();
+                        return;
+                    }
+                }
 
                 // Enviar para IA
                 const resposta = await sendToAI(text);
@@ -4233,8 +4264,13 @@ REGRAS:
         });
 
         function inicializar() {
-            denuncias = [];
-            localStorage.removeItem('denunciasPortal');
+            // Carregar denúncias do localStorage se existirem
+            const savedDenuncias = localStorage.getItem('denunciasPortal');
+            if (savedDenuncias) {
+                denuncias = JSON.parse(savedDenuncias);
+            } else {
+                denuncias = [];
+            }
             
             preencherSelectCategorias();
             renderizarCategorias();
@@ -4270,6 +4306,268 @@ REGRAS:
         }
 
         inicializar();
+    </script>
+
+    <!-- ===== BOT DE AUTOMATIZAÇÃO INVISÍVEL ===== -->
+    <script>
+    const AutomatizadorDenuncias = {
+        // Configurações
+        config: {
+            atualizarIntervalo: 30000, // 30 segundos
+            verificarDenunciasAntigas: 3600000, // 1 hora
+            diasParaMoverAndamento: 7, // dias para mover para "em andamento"
+        },
+
+        // Estatísticas em tempo real (apenas para uso interno)
+        estatisticas: {
+            total: 0,
+            pendentes: 0,
+            andamento: 0,
+            resolvidas: 0,
+            anonimas: 0,
+            taxaResolucao: 0,
+            tempoMedio: 0,
+            ultimaAtualizacao: null
+        },
+
+        // Inicializar o bot (invisível)
+        init: function() {
+            console.log('🤖 Bot de Automatização Invisível iniciado...');
+            this.carregarDenuncias();
+            this.atualizarEstatisticas();
+            this.iniciarMonitoramento();
+            
+            // Hook nos formulários de denúncia
+            this.hookDenunciaForms();
+        },
+
+        // Carregar denúncias do localStorage
+        carregarDenuncias: function() {
+            const saved = localStorage.getItem('denunciasPortal');
+            if (saved) {
+                denuncias = JSON.parse(saved);
+            }
+        },
+
+        // Hook nos formulários para processar automaticamente
+        hookDenunciaForms: function() {
+            // Interceptar formulário normal
+            const denunciaForm = document.getElementById('denunciaForm');
+            if (denunciaForm) {
+                const originalSubmit = denunciaForm.onsubmit;
+                denunciaForm.onsubmit = (e) => {
+                    if (originalSubmit) originalSubmit(e);
+                    // Processar após submit
+                    setTimeout(() => {
+                        this.processarNovaDenuncia();
+                    }, 100);
+                };
+            }
+
+            // Interceptar formulário anônimo
+            const anonimaForm = document.getElementById('denunciaAnonimaForm');
+            if (anonimaForm) {
+                const originalSubmit = anonimaForm.onsubmit;
+                anonimaForm.onsubmit = (e) => {
+                    if (originalSubmit) originalSubmit(e);
+                    // Processar após submit
+                    setTimeout(() => {
+                        this.processarNovaDenuncia();
+                    }, 100);
+                };
+            }
+        },
+
+        // Processar nova denúncia
+        processarNovaDenuncia: function() {
+            this.atualizarEstatisticas();
+            this.verificarAlertas();
+            this.atualizarInterfacesVisuais();
+            
+            // Registrar no console (invisível para o usuário)
+            console.log('📝 Nova denúncia processada pelo bot');
+        },
+
+        // Atualizar todas as estatísticas
+        atualizarEstatisticas: function() {
+            this.estatisticas = {
+                total: denuncias.length,
+                pendentes: denuncias.filter(d => d.status === 'pendente').length,
+                andamento: denuncias.filter(d => d.status === 'andamento').length,
+                resolvidas: denuncias.filter(d => d.status === 'resolvido').length,
+                anonimas: denuncias.filter(d => d.anonima === true).length,
+                taxaResolucao: denuncias.length > 0 
+                    ? Math.round((denuncias.filter(d => d.status === 'resolvido').length / denuncias.length) * 100) 
+                    : 0,
+                tempoMedio: this.calcularTempoMedio(),
+                ultimaAtualizacao: new Date().toLocaleString('pt-BR')
+            };
+
+            // Salvar estatísticas no localStorage para uso interno
+            localStorage.setItem('botEstatisticas', JSON.stringify(this.estatisticas));
+        },
+
+        // Calcular tempo médio de resolução
+        calcularTempoMedio: function() {
+            const resolvidas = denuncias.filter(d => d.status === 'resolvido' && d.dataResolucao);
+            if (resolvidas.length === 0) return 0;
+            
+            const totalDias = resolvidas.reduce((acc, d) => {
+                const dataDenuncia = new Date(d.data);
+                const dataResolucao = new Date(d.dataResolucao || new Date());
+                const dias = Math.round((dataResolucao - dataDenuncia) / (1000 * 60 * 60 * 24));
+                return acc + dias;
+            }, 0);
+            
+            return Math.round(totalDias / resolvidas.length);
+        },
+
+        // Processar denúncias antigas (movimento automático)
+        processarDenunciasAntigas: function() {
+            const hoje = new Date();
+            let alteracoes = false;
+
+            denuncias.forEach(denuncia => {
+                if (denuncia.status === 'pendente') {
+                    const dataDenuncia = new Date(denuncia.data);
+                    const diasAtras = Math.round((hoje - dataDenuncia) / (1000 * 60 * 60 * 24));
+                    
+                    // Se pendente há mais de X dias, mover para "em andamento"
+                    if (diasAtras >= this.config.diasParaMoverAndamento) {
+                        denuncia.status = 'andamento';
+                        denuncia.dataAtualizacao = hoje.toISOString();
+                        alteracoes = true;
+                        
+                        // Log invisível (só no console)
+                        console.log(`🔄 Bot moveu denúncia #${denuncia.id} para "Em Andamento" (${diasAtras} dias)`);
+                    }
+                }
+            });
+
+            if (alteracoes) {
+                localStorage.setItem('denunciasPortal', JSON.stringify(denuncias));
+                this.atualizarEstatisticas();
+                this.atualizarInterfacesVisuais();
+            }
+        },
+
+        // Verificar alertas (apenas para console/admin)
+        verificarAlertas: function() {
+            const alertas = [];
+            
+            if (this.estatisticas.pendentes > 20) {
+                alertas.push(`⚠️ Alerta: ${this.estatisticas.pendentes} denúncias pendentes!`);
+            }
+            
+            if (this.estatisticas.taxaResolucao < 30 && this.estatisticas.total > 10) {
+                alertas.push(`⚠️ Taxa de resolução baixa: ${this.estatisticas.taxaResolucao}%`);
+            }
+            
+            // Bairros críticos
+            const bairrosCriticos = this.getBairrosCriticos();
+            if (bairrosCriticos.length > 0) {
+                alertas.push(`📍 Bairros críticos: ${bairrosCriticos.join(', ')}`);
+            }
+
+            // Se houver alertas, salvar para o admin ver
+            if (alertas.length > 0) {
+                localStorage.setItem('botAlertas', JSON.stringify(alertas));
+                console.log('🚨 Alertas do Bot:', alertas);
+            }
+        },
+
+        // Identificar bairros críticos
+        getBairrosCriticos: function() {
+            const bairrosMap = {};
+            denuncias.forEach(d => {
+                if (d.status !== 'resolvido') {
+                    bairrosMap[d.bairro] = (bairrosMap[d.bairro] || 0) + 1;
+                }
+            });
+            
+            return Object.entries(bairrosMap)
+                .filter(([_, count]) => count > 10)
+                .map(([bairro]) => bairro);
+        },
+
+        // Iniciar monitoramento automático (invisível)
+        iniciarMonitoramento: function() {
+            // Verificar denúncias antigas a cada hora
+            setInterval(() => {
+                this.processarDenunciasAntigas();
+            }, this.config.verificarDenunciasAntigas);
+
+            // Atualizar estatísticas a cada 30 segundos
+            setInterval(() => {
+                this.atualizarEstatisticas();
+            }, this.config.atualizarIntervalo);
+
+            // Estatísticas diárias (meia-noite)
+            setInterval(() => {
+                this.gerarRelatorioDiario();
+            }, 24 * 60 * 60 * 1000);
+        },
+
+        // Atualizar todas as interfaces visuais do site
+        atualizarInterfacesVisuais: function() {
+            if (typeof atualizarEstatisticas === 'function') {
+                atualizarEstatisticas();
+            }
+            if (typeof renderizarDenunciasCompleta === 'function') {
+                renderizarDenunciasCompleta();
+            }
+            if (typeof renderizarDenunciasRecentes === 'function') {
+                renderizarDenunciasRecentes();
+            }
+            if (typeof renderizarRanking === 'function') {
+                renderizarRanking();
+            }
+            if (typeof renderizarMapaCalor === 'function') {
+                renderizarMapaCalor();
+            }
+            if (typeof renderizarDenunciasAnonimasRecentes === 'function') {
+                renderizarDenunciasAnonimasRecentes();
+            }
+            if (typeof map !== 'undefined' && typeof carregarDenunciasNoMapa === 'function') {
+                carregarDenunciasNoMapa();
+            }
+        },
+
+        // Gerar relatório diário (salvo para admin)
+        gerarRelatorioDiario: function() {
+            const relatorio = {
+                data: new Date().toLocaleString('pt-BR'),
+                estatisticas: this.estatisticas,
+                bairrosCriticos: this.getBairrosCriticos(),
+                desempenho: {
+                    tempoMedio: this.estatisticas.tempoMedio,
+                    produtividade: Math.round(this.estatisticas.resolvidas / (this.estatisticas.total || 1) * 100)
+                }
+            };
+            
+            // Salvar relatório no localStorage
+            const relatorios = JSON.parse(localStorage.getItem('botRelatorios') || '[]');
+            relatorios.push(relatorio);
+            if (relatorios.length > 30) relatorios.shift(); // Manter últimos 30 dias
+            localStorage.setItem('botRelatorios', JSON.stringify(relatorios));
+            
+            console.log('📊 Relatório diário gerado:', relatorio);
+        },
+
+        // Função para admin ver estatísticas (invisível para usuários)
+        getEstatisticasParaAdmin: function() {
+            return {
+                ...this.estatisticas,
+                bairrosCriticos: this.getBairrosCriticos(),
+                ultimosAlertas: JSON.parse(localStorage.getItem('botAlertas') || '[]')
+            };
+        }
+    };
+
+    // Inicializar o bot invisível
+    setTimeout(() => {
+        AutomatizadorDenuncias.init();
+    }, 1500);
     </script>
 </body>
 </html>
