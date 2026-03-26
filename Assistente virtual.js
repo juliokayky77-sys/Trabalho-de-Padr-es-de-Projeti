@@ -1,4 +1,4 @@
-// ===== ASSISTENTE VIRTUAL =====
+
 const AssistenteVirtual = {
     historico: [],
     denuncias: [],
@@ -57,7 +57,7 @@ const AssistenteVirtual = {
     processarComando: function(texto) {
         const t = texto.toLowerCase();
         
-        // Comandos
+     
         if (t === 'ajuda') {
             return "🎯 **Comandos:**\n\n" +
                    "• `estatísticas` - Ver números do portal\n" +
