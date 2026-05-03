@@ -2,11 +2,14 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <meta name="theme-color" content="#1a4d8c">
     <title>Participa Sena - Sistema de Relatos Urbanos</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://vlibras.gov.br/app/vlibras.css" />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- QR Code Library - Versão estável -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -41,7 +44,7 @@
             line-height: 1.5;
         }
 
-        /* Accessibility Panel - Superior */
+        /* Accessibility Panel */
         .accessibility-bar {
             background: var(--gray-800);
             color: white;
@@ -288,7 +291,7 @@
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--accent, #ffb347);
+            color: #ffb347;
         }
 
         .stat-label {
@@ -843,45 +846,215 @@
             color: var(--gray-600);
         }
 
+        /* ========== QR CODE SECTION ========== */
+        .qrcode-section {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+        }
+
+        .qrcode-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .qrcode-box {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            display: inline-block;
+            box-shadow: var(--shadow-md);
+        }
+
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #qrcode img {
+            width: 200px;
+            height: 200px;
+            border-radius: 12px;
+        }
+
+        .qrcode-url {
+            background: var(--gray-100);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            word-break: break-all;
+            margin: 15px 0;
+        }
+
+        .btn-copy-url {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .btn-copy-url:hover {
+            background: var(--primary-dark);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .share-whatsapp { background: #25D366; color: white; }
+        .share-telegram { background: #0088cc; color: white; }
+        .share-email { background: #ea4335; color: white; }
+
+        /* Version Switch */
+        .version-switch {
+            background: var(--gray-100);
+            padding: 6px 12px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+        }
+        
+        .version-switch button {
+            background: white;
+            border: 1px solid var(--gray-300);
+            padding: 4px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.2s;
+        }
+        
+        .version-switch button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .current-version-badge {
+            background: var(--success);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        /* Menu Hamburguer */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--primary);
+            padding: 8px;
+        }
+
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100%;
+            background: white;
+            z-index: 1001;
+            transition: right 0.3s ease;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.open { right: 0; }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .mobile-nav-btn {
+            display: block;
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            text-align: left;
+            background: var(--gray-50);
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* Forced modes */
+        body.force-desktop .menu-toggle,
+        body.force-desktop .mobile-menu,
+        body.force-desktop .mobile-menu-overlay { display: none !important; }
+        body.force-desktop .nav-menu { display: flex !important; }
+        body.force-mobile .nav-menu { display: none !important; }
+        body.force-mobile .menu-toggle { display: block !important; }
+
         /* Responsive */
         @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                text-align: center;
-            }
-            .nav-menu {
-                justify-content: center;
-            }
-            .hero-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            .hero-stats {
-                justify-content: center;
-            }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .bot-chat {
-                width: 300px;
-                height: 450px;
-            }
-            .accessibility-bar {
-                justify-content: center;
-            }
-            .voice-bar {
-                justify-content: center;
-            }
-            .top-bar {
-                flex-direction: column;
-                text-align: center;
-            }
+            .nav-menu { display: none; }
+            .menu-toggle { display: block; }
+            .header-container { flex-direction: row; justify-content: space-between; }
+            .hero { padding: 32px 16px; }
+            .hero-text h2 { font-size: 1.6rem; }
+            .hero-stats { gap: 20px; justify-content: center; }
+            .hero-search { min-width: auto; width: 100%; }
+            .container { padding: 20px 16px; }
+            .noticias-grid { grid-template-columns: 1fr; }
+            .categorias-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .bot-chat { width: calc(100vw - 40px); height: 70vh; }
+            .top-bar { flex-direction: column; text-align: center; }
+            .contact-info { flex-direction: column; gap: 8px; }
         }
 
         @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+            .categorias-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
         }
 
         /* Reading Guide */
@@ -896,33 +1069,19 @@
             z-index: 9999;
             display: none;
         }
+        .reading-guide.active { display: block; }
 
-        .reading-guide.active {
-            display: block;
-        }
-
-        /* High Contrast */
         body.high-contrast {
             --primary: #000080;
             --primary-dark: #000040;
             --gray-800: #000000;
             --gray-600: #333333;
         }
-
-        body.high-contrast .hero {
-            background: #000;
-        }
-
-        /* Large Text */
-        body.large-text {
-            font-size: 18px;
-        }
-
-        /* No Animations */
-        body.no-animations * {
-            animation: none !important;
-            transition: none !important;
-        }
+        body.high-contrast .hero { background: #000; }
+        body.large-text { font-size: 18px; }
+        body.no-animations * { animation: none !important; transition: none !important; }
+        body.increased-spacing { line-height: 1.8; letter-spacing: 0.5px; }
+        body.dyslexia-friendly { font-family: 'OpenDyslexic', 'Comic Sans MS', 'Chalkboard SE', sans-serif; }
     </style>
 </head>
 <body>
@@ -940,7 +1099,7 @@
     <!-- Voice Bar -->
     <div class="voice-bar">
         <button class="voice-btn" id="voiceStartBtn" onclick="startVoiceRecognition()">🎤</button>
-        <span class="voice-status" id="voiceStatus">Clique no microfone para falar</span>
+        <span class="voice-status" id="voiceStatus">🎤 Clique para falar com o assistente</span>
         <button class="voice-btn" onclick="speakText()" style="background: var(--success);">🔊</button>
         <button class="voice-btn" onclick="stopSpeaking()" style="background: var(--secondary);">⏹️</button>
     </div>
@@ -983,8 +1142,48 @@
                 </div>
                 <button class="nav-btn nav-btn-primary" onclick="mostrarModalRelatoAnonimo()">Relato Anônimo</button>
             </nav>
+            <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+        </div>
+        
+        <!-- Seletor de Versão -->
+        <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 12px;">
+            <div class="version-switch">
+                <span>📱💻 Versão:</span>
+                <button id="btnAutoVersion" class="active" onclick="setVersion('auto')">🤖 Auto</button>
+                <button id="btnDesktopVersion" onclick="setVersion('desktop')">🖥️ Desktop</button>
+                <button id="btnMobileVersion" onclick="setVersion('mobile')">📱 Mobile</button>
+            </div>
+            <div class="current-version-badge" id="versionBadge">🔍 Detectando dispositivo...</div>
         </div>
     </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <h3>📱 Menu</h3>
+            <button class="close-menu" onclick="toggleMobileMenu()">✕</button>
+        </div>
+        <button class="mobile-nav-btn" onclick="mostrarPaginaMobile('inicial')">🏠 Início</button>
+        <button class="mobile-nav-btn" onclick="mostrarPaginaMobile('noticias')">📰 Notícias</button>
+        <button class="mobile-nav-btn" onclick="mostrarPaginaMobile('relatos')">⚠️ Relatos</button>
+        <button class="mobile-nav-btn" onclick="mostrarPaginaMobile('transparencia')">📊 Transparência</button>
+        <button class="mobile-nav-btn" onclick="mostrarPaginaMobile('meus-relatos')">📋 Meus Relatos</button>
+        <hr style="margin: 15px 0;">
+        <div id="mobile-auth-buttons">
+            <button class="mobile-nav-btn" onclick="mostrarModalLogin(); toggleMobileMenu()">🔐 Entrar</button>
+            <button class="mobile-nav-btn" onclick="mostrarModalCadastro(); toggleMobileMenu()">📝 Cadastrar</button>
+        </div>
+        <div id="mobile-user-info" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 10px; background: var(--primary-light); border-radius: 10px; margin-bottom: 10px;">
+                <span>👤</span>
+                <span id="mobile-user-name"></span>
+            </div>
+            <button class="mobile-nav-btn" onclick="logout(); toggleMobileMenu()">🚪 Sair</button>
+        </div>
+        <hr style="margin: 15px 0;">
+        <button class="mobile-nav-btn" onclick="mostrarModalRelatoAnonimo(); toggleMobileMenu()">🕵️ Relato Anônimo</button>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -993,22 +1192,10 @@
                 <h2>Sua voz transforma a cidade</h2>
                 <p>Relate problemas, acompanhe soluções e participe ativamente da melhoria da sua comunidade.</p>
                 <div class="hero-stats" id="stats-container">
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-relatos">0</div>
-                        <div class="stat-label">Total de Relatos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="resolvidos-contador">0</div>
-                        <div class="stat-label">Resolvidos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="anonimos-contador">0</div>
-                        <div class="stat-label">Anônimos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="taxa-sucesso">0%</div>
-                        <div class="stat-label">Taxa de Solução</div>
-                    </div>
+                    <div class="stat-card"><div class="stat-number" id="total-relatos">0</div><div class="stat-label">Total de Relatos</div></div>
+                    <div class="stat-card"><div class="stat-number" id="resolvidos-contador">0</div><div class="stat-label">Resolvidos</div></div>
+                    <div class="stat-card"><div class="stat-number" id="anonimos-contador">0</div><div class="stat-label">Anônimos</div></div>
+                    <div class="stat-card"><div class="stat-number" id="taxa-sucesso">0%</div><div class="stat-label">Taxa de Solução</div></div>
                 </div>
             </div>
             <div class="hero-search">
@@ -1020,7 +1207,6 @@
 
     <!-- Main Content -->
     <main class="container">
-        <!-- Página Inicial -->
         <div id="inicial-page" class="page active">
             <div class="section-tabs">
                 <button class="tab-btn active" onclick="mudarAba('noticias')">📰 Últimas Notícias</button>
@@ -1060,45 +1246,45 @@
                 </div>
             </section>
 
+            <!-- QR CODE SECTION - CORRIGIDA -->
+            <section class="qrcode-section">
+                <div class="qrcode-container">
+                    <h2 style="color: var(--primary); margin-bottom: 10px;">📱 Acesse pelo Celular</h2>
+                    <p style="color: var(--gray-600); margin-bottom: 20px;">Escaneie o QR Code abaixo com a câmera do seu celular</p>
+                    <div class="qrcode-box">
+                        <div id="qrcode"></div>
+                    </div>
+                    <div class="qrcode-info">
+                        <div class="qrcode-url" id="currentUrl"></div>
+                        <button class="btn-copy-url" onclick="copiarUrl()">📋 Copiar Link</button>
+                        <div class="share-buttons">
+                            <button class="share-btn share-whatsapp" onclick="compartilharWhatsApp()">📱 WhatsApp</button>
+                            <button class="share-btn share-telegram" onclick="compartilharTelegram()">✈️ Telegram</button>
+                            <button class="share-btn share-email" onclick="compartilharEmail()">📧 E-mail</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section style="margin-top: 48px;">
                 <h2 style="margin-bottom: 24px;">📍 Categorias para Relato</h2>
                 <div class="categorias-grid" id="categorias-lista"></div>
             </section>
         </div>
 
-        <!-- Página de Notícias -->
         <div id="noticias-page" class="page">
-            <div style="margin-bottom: 24px;">
-                <button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button>
-            </div>
+            <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
             <div class="noticias-grid" id="noticias-page-lista"></div>
         </div>
 
-        <!-- Página de Relatos -->
         <div id="relatos-page" class="page">
-            <div style="margin-bottom: 24px;">
-                <button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button>
-            </div>
-            
+            <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
             <div class="stats-grid">
-                <div class="stat-card-box">
-                    <div class="stat-number-large" id="total-relatos-page">0</div>
-                    <div>Total de Relatos</div>
-                </div>
-                <div class="stat-card-box">
-                    <div class="stat-number-large" id="pendentes-page">0</div>
-                    <div>Pendentes</div>
-                </div>
-                <div class="stat-card-box">
-                    <div class="stat-number-large" id="andamento-page">0</div>
-                    <div>Em Andamento</div>
-                </div>
-                <div class="stat-card-box">
-                    <div class="stat-number-large" id="resolvidos-page">0</div>
-                    <div>Resolvidos</div>
-                </div>
+                <div class="stat-card-box"><div class="stat-number-large" id="total-relatos-page">0</div><div>Total de Relatos</div></div>
+                <div class="stat-card-box"><div class="stat-number-large" id="pendentes-page">0</div><div>Pendentes</div></div>
+                <div class="stat-card-box"><div class="stat-number-large" id="andamento-page">0</div><div>Em Andamento</div></div>
+                <div class="stat-card-box"><div class="stat-number-large" id="resolvidos-page">0</div><div>Resolvidos</div></div>
             </div>
-
             <div class="timeline-container">
                 <div class="timeline-header">
                     <h3>📋 Todos os Relatos</h3>
@@ -1113,40 +1299,23 @@
             </div>
         </div>
 
-        <!-- Página Meus Relatos -->
         <div id="meus-relatos-page" class="page">
-            <div style="margin-bottom: 24px;">
-                <button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button>
-            </div>
-            <div class="timeline-container">
-                <h3>📋 Meus Relatos</h3>
-                <div id="meus-relatos-lista"></div>
-            </div>
+            <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
+            <div class="timeline-container"><h3>📋 Meus Relatos</h3><div id="meus-relatos-lista"></div></div>
         </div>
 
-        <!-- Página Transparência -->
         <div id="transparencia-page" class="page">
-            <div style="margin-bottom: 24px;">
-                <button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button>
-            </div>
+            <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
             <div class="timeline-container">
                 <h3>📊 Transparência Pública</h3>
                 <p style="margin: 16px 0;">Dados atualizados mensalmente • Exercício 2024</p>
-                <div class="table-container" style="overflow-x: auto;">
+                <div style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: var(--gray-100);">
-                                <th style="padding: 12px; text-align: left;">Secretaria</th>
-                                <th style="padding: 12px; text-align: left;">Orçamento</th>
-                                <th style="padding: 12px; text-align: left;">Executado</th>
-                                <th style="padding: 12px; text-align: left;">%</th>
-                            </tr>
-                        </thead>
+                        <thead><tr style="background: var(--gray-100);"><th style="padding: 12px;">Secretaria</th><th>Orçamento</th><th>Executado</th><th>%</th></tr></thead>
                         <tbody>
                             <tr><td style="padding: 10px;">Educação</td><td>R$ 120M</td><td>R$ 98.5M</td><td>82%</td></tr>
                             <tr><td style="padding: 10px;">Saúde</td><td>R$ 95M</td><td>R$ 82.3M</td><td>87%</td></tr>
                             <tr><td style="padding: 10px;">Obras</td><td>R$ 75M</td><td>R$ 62.8M</td><td>84%</td></tr>
-                            <tr style="background: var(--gray-100); font-weight: bold;"><td style="padding: 10px;">Total</td><td>R$ 368M</td><td>R$ 305.7M</td><td>83%</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1157,10 +1326,7 @@
     <!-- Map Section -->
     <section class="map-section">
         <div class="map-container">
-            <div class="map-title">
-                <h2>🗺️ Acompanhe os Relatos em Tempo Real</h2>
-                <p>Visualize no mapa todos os relatos registrados pela população</p>
-            </div>
+            <div class="map-title"><h2>🗺️ Acompanhe os Relatos em Tempo Real</h2><p>Visualize no mapa todos os relatos registrados pela população</p></div>
             <button class="location-btn" onclick="getUserLocation()">📍 Minha Localização</button>
             <div id="map"></div>
         </div>
@@ -1171,18 +1337,10 @@
         <div class="modal-content">
             <h3 style="margin-bottom: 24px;">🔐 Entrar no Portal</h3>
             <form id="loginForm">
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="email" id="login-email" required>
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="login-senha" required>
-                </div>
+                <div class="form-group"><label>E-mail</label><input type="email" id="login-email" required></div>
+                <div class="form-group"><label>Senha</label><input type="password" id="login-senha" required></div>
                 <button type="submit" class="nav-btn nav-btn-primary" style="width: 100%;">Entrar</button>
-                <p style="text-align: center; margin-top: 16px;">
-                    Não tem conta? <a href="#" onclick="fecharModal('modal-login'); mostrarModalCadastro()">Cadastre-se</a>
-                </p>
+                <p style="text-align: center; margin-top: 16px;">Não tem conta? <a href="#" onclick="fecharModal('modal-login'); mostrarModalCadastro()">Cadastre-se</a></p>
                 <button type="button" onclick="fecharModal('modal-login')" style="margin-top: 12px; width: 100%;" class="nav-btn">Cancelar</button>
             </form>
         </div>
@@ -1193,34 +1351,13 @@
             <h3 style="margin-bottom: 24px;">📝 Cadastro de Cidadão</h3>
             <p style="margin-bottom: 16px; font-size: 0.8rem; color: var(--gray-600);">⚠️ CPF único para evitar relatos falsos. Dados protegidos pela LGPD.</p>
             <form id="cadastroForm">
-                <div class="form-group">
-                    <label>Nome Completo *</label>
-                    <input type="text" id="cadastro-nome" required>
-                </div>
-                <div class="form-group">
-                    <label>CPF *</label>
-                    <input type="text" id="cadastro-cpf" placeholder="000.000.000-00" maxlength="14" required>
-                </div>
-                <div class="form-group">
-                    <label>E-mail *</label>
-                    <input type="email" id="cadastro-email" required>
-                </div>
-                <div class="form-group">
-                    <label>Telefone *</label>
-                    <input type="tel" id="cadastro-telefone" placeholder="(68) 99999-9999" required>
-                </div>
-                <div class="form-group">
-                    <label>Endereço</label>
-                    <input type="text" id="cadastro-endereco">
-                </div>
-                <div class="form-group">
-                    <label>Senha *</label>
-                    <input type="password" id="cadastro-senha" placeholder="Mínimo 6 caracteres" required>
-                </div>
-                <div class="form-group">
-                    <label>Confirmar Senha *</label>
-                    <input type="password" id="cadastro-confirmar-senha" required>
-                </div>
+                <div class="form-group"><label>Nome Completo *</label><input type="text" id="cadastro-nome" required></div>
+                <div class="form-group"><label>CPF *</label><input type="text" id="cadastro-cpf" placeholder="000.000.000-00" maxlength="14" required></div>
+                <div class="form-group"><label>E-mail *</label><input type="email" id="cadastro-email" required></div>
+                <div class="form-group"><label>Telefone *</label><input type="tel" id="cadastro-telefone" placeholder="(68) 99999-9999" required></div>
+                <div class="form-group"><label>Endereço</label><input type="text" id="cadastro-endereco"></div>
+                <div class="form-group"><label>Senha *</label><input type="password" id="cadastro-senha" placeholder="Mínimo 6 caracteres" required></div>
+                <div class="form-group"><label>Confirmar Senha *</label><input type="password" id="cadastro-confirmar-senha" required></div>
                 <button type="submit" class="nav-btn nav-btn-primary" style="width: 100%;">Cadastrar</button>
                 <button type="button" onclick="fecharModal('modal-cadastro')" style="margin-top: 12px; width: 100%;" class="nav-btn">Cancelar</button>
             </form>
@@ -1231,35 +1368,11 @@
         <div class="modal-content">
             <h3 style="margin-bottom: 24px;">⚠️ Registrar Relato</h3>
             <form id="relatoForm">
-                <div class="form-group">
-                    <label>Categoria *</label>
-                    <select id="relato-categoria" required>
-                        <option value="">Selecione</option>
-                        <option value="Buracos na rua">🕳️ Buracos na rua</option>
-                        <option value="Iluminação pública">💡 Iluminação pública</option>
-                        <option value="Lixo acumulado">🗑️ Lixo acumulado</option>
-                        <option value="Esgoto a céu aberto">💩 Esgoto a céu aberto</option>
-                        <option value="Segurança">🚔 Segurança</option>
-                        <option value="Ruas não asfaltadas">🛣️ Ruas não asfaltadas</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Endereço *</label>
-                    <input type="text" id="relato-endereco" required>
-                </div>
-                <div class="form-group">
-                    <label>Bairro *</label>
-                    <input type="text" id="relato-bairro" required>
-                </div>
-                <div class="form-group">
-                    <label>Descrição *</label>
-                    <textarea id="relato-descricao" rows="4" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="relato-anonimo"> Relato Anônimo
-                    </label>
-                </div>
+                <div class="form-group"><label>Categoria *</label><select id="relato-categoria" required><option value="">Selecione</option><option value="Buracos na rua">🕳️ Buracos na rua</option><option value="Iluminação pública">💡 Iluminação pública</option><option value="Lixo acumulado">🗑️ Lixo acumulado</option><option value="Esgoto a céu aberto">💩 Esgoto a céu aberto</option><option value="Segurança">🚔 Segurança</option><option value="Ruas não asfaltadas">🛣️ Ruas não asfaltadas</option></select></div>
+                <div class="form-group"><label>Endereço *</label><input type="text" id="relato-endereco" required></div>
+                <div class="form-group"><label>Bairro *</label><input type="text" id="relato-bairro" required></div>
+                <div class="form-group"><label>Descrição *</label><textarea id="relato-descricao" rows="4" required></textarea></div>
+                <div class="form-group"><label><input type="checkbox" id="relato-anonimo"> Relato Anônimo</label></div>
                 <button type="submit" class="nav-btn nav-btn-primary" style="width: 100%;">Enviar Relato</button>
                 <button type="button" onclick="fecharModal('modal-relato')" style="margin-top: 12px; width: 100%;" class="nav-btn">Cancelar</button>
             </form>
@@ -1271,30 +1384,10 @@
             <h3 style="margin-bottom: 24px;">🕵️ Relato Anônimo</h3>
             <p style="margin-bottom: 16px; font-size: 0.8rem;">🔒 100% anônimo - nenhum dado pessoal será solicitado</p>
             <form id="relatoAnonimoForm">
-                <div class="form-group">
-                    <label>Categoria *</label>
-                    <select id="relato-anonimo-categoria" required>
-                        <option value="">Selecione</option>
-                        <option value="Buracos na rua">🕳️ Buracos na rua</option>
-                        <option value="Iluminação pública">💡 Iluminação pública</option>
-                        <option value="Lixo acumulado">🗑️ Lixo acumulado</option>
-                        <option value="Esgoto a céu aberto">💩 Esgoto a céu aberto</option>
-                        <option value="Segurança">🚔 Segurança</option>
-                        <option value="Ruas não asfaltadas">🛣️ Ruas não asfaltadas</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Endereço *</label>
-                    <input type="text" id="relato-anonimo-endereco" required>
-                </div>
-                <div class="form-group">
-                    <label>Bairro *</label>
-                    <input type="text" id="relato-anonimo-bairro" required>
-                </div>
-                <div class="form-group">
-                    <label>Descrição *</label>
-                    <textarea id="relato-anonimo-descricao" rows="4" required></textarea>
-                </div>
+                <div class="form-group"><label>Categoria *</label><select id="relato-anonimo-categoria" required><option value="">Selecione</option><option value="Buracos na rua">🕳️ Buracos na rua</option><option value="Iluminação pública">💡 Iluminação pública</option><option value="Lixo acumulado">🗑️ Lixo acumulado</option><option value="Esgoto a céu aberto">💩 Esgoto a céu aberto</option><option value="Segurança">🚔 Segurança</option><option value="Ruas não asfaltadas">🛣️ Ruas não asfaltadas</option></select></div>
+                <div class="form-group"><label>Endereço *</label><input type="text" id="relato-anonimo-endereco" required></div>
+                <div class="form-group"><label>Bairro *</label><input type="text" id="relato-anonimo-bairro" required></div>
+                <div class="form-group"><label>Descrição *</label><textarea id="relato-anonimo-descricao" rows="4" required></textarea></div>
                 <button type="submit" class="nav-btn nav-btn-primary" style="width: 100%;">Enviar Relato</button>
                 <button type="button" onclick="fecharModal('modal-relato-anonimo')" style="margin-top: 12px; width: 100%;" class="nav-btn">Cancelar</button>
             </form>
@@ -1304,16 +1397,9 @@
     <!-- Bot Chat -->
     <div class="bot-container">
         <div class="bot-chat minimized" id="botChat">
-            <div class="bot-header" onclick="toggleBot()">
-                <span>🤖</span>
-                <span><strong>Assistente IA</strong><br><small>Online</small></span>
-                <button class="bot-close" onclick="event.stopPropagation(); toggleBot()" style="margin-left: auto; background: none; border: none; color: white;">✕</button>
-            </div>
+            <div class="bot-header" onclick="toggleBot()"><span>🤖</span><span><strong>Assistente IA</strong><br><small>Online 24h</small></span><button class="bot-close" onclick="event.stopPropagation(); toggleBot()" style="margin-left: auto; background: none; border: none; color: white; cursor: pointer;">✕</button></div>
             <div class="bot-messages" id="botMessages"></div>
-            <div class="bot-input-area">
-                <input type="text" id="botInput" placeholder="Digite sua mensagem..." onkeypress="if(event.key==='Enter') sendMessage()">
-                <button class="bot-send-btn" onclick="sendMessage()">➤</button>
-            </div>
+            <div class="bot-input-area"><input type="text" id="botInput" placeholder="Digite sua mensagem ou use o microfone..." onkeypress="if(event.key==='Enter') sendMessage()"><button class="bot-send-btn" onclick="sendMessage()">➤</button></div>
         </div>
         <div class="bot-avatar" onclick="toggleBot()">🤖</div>
     </div>
@@ -1321,31 +1407,11 @@
     <!-- Footer -->
     <footer>
         <div class="footer-grid">
-            <div class="footer-section">
-                <h4>📢 Portal Cidadão</h4>
-                <p>Plataforma colaborativa para notícias e relatos urbanos.</p>
-            </div>
-            <div class="footer-section">
-                <h4>Links Rápidos</h4>
-                <ul>
-                    <li><a href="#" onclick="event.preventDefault(); mostrarPagina('inicial')">Início</a></li>
-                    <li><a href="#" onclick="event.preventDefault(); mostrarPagina('noticias')">Notícias</a></li>
-                    <li><a href="#" onclick="event.preventDefault(); mostrarPagina('relatos')">Relatos</a></li>
-                    <li><a href="#" onclick="event.preventDefault(); mostrarPagina('transparencia')">Transparência</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Contato</h4>
-                <ul>
-                    <li>📞 +55 68 9912-3456</li>
-                    <li>✉️ relatos@portalcidadao.gov</li>
-                    <li>📍 Sena Madureira - AC</li>
-                </ul>
-            </div>
+            <div class="footer-section"><h4>📢 Portal Cidadão</h4><p>Plataforma colaborativa para notícias e relatos urbanos.</p></div>
+            <div class="footer-section"><h4>Links Rápidos</h4><ul><li><a href="#" onclick="event.preventDefault(); mostrarPagina('inicial')">Início</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('noticias')">Notícias</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('relatos')">Relatos</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('transparencia')">Transparência</a></li></ul></div>
+            <div class="footer-section"><h4>Contato</h4><ul><li>📞 +55 68 9912-3456</li><li>✉️ relatos@portalcidadao.gov</li><li>📍 Sena Madureira - AC</li></ul></div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Portal Cidadão - Todos os direitos reservados</p>
-        </div>
+        <div class="footer-bottom"><p>&copy; 2024 Portal Cidadão - Todos os direitos reservados</p></div>
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1353,13 +1419,14 @@
     
     <script>
         // ============================================
-        // SISTEMA COMPLETO
+        // SISTEMA COMPLETO - QR CODE CORRIGIDO
         // ============================================
         
         let usuarioLogado = null;
         let relatos = [];
         let usuarios = [];
         let map;
+        let currentVersion = 'auto';
 
         const categoriasRelato = [
             { nome: "Buracos na rua", icone: "🕳️", desc: "Problemas de pavimentação" },
@@ -1376,9 +1443,135 @@
             { titulo: "Prefeito discute saúde itinerante com senador", categoria: "Saúde", data: "09/01/2024", resumo: "Recursos para UBS fluvial atendendo comunidades ribeirinhas...", imagem: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTorXtcQIwSwRl3q-VjQGYEnCA6WLOiILjHHA&s" }
         ];
 
-        const bairros = ["Centro", "Jardim Primavera", "Bosque", "Cidade Nova", "Bom Sucesso", "Vitória", "Segundo Distrito"];
+        // ========== FUNÇÃO DO QR CODE CORRIGIDA ==========
+        function gerarQRCode() {
+            try {
+                const url = window.location.href;
+                const qrcodeDiv = document.getElementById('qrcode');
+                const urlSpan = document.getElementById('currentUrl');
+                
+                if (!qrcodeDiv) {
+                    console.error('Elemento qrcode não encontrado');
+                    return;
+                }
+                
+                // Limpar conteúdo anterior
+                qrcodeDiv.innerHTML = '';
+                
+                // Mostrar URL
+                if (urlSpan) urlSpan.textContent = url;
+                
+                // Criar QR Code usando a biblioteca corretamente
+                if (typeof QRCode !== 'undefined') {
+                    new QRCode(qrcodeDiv, {
+                        text: url,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#1a4d8c",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                    console.log('QR Code gerado com sucesso!');
+                } else {
+                    console.error('Biblioteca QRCode não carregada');
+                    qrcodeDiv.innerHTML = '<p style="color: red;">Erro ao carregar QR Code. Recarregue a página.</p>';
+                }
+            } catch (error) {
+                console.error('Erro ao gerar QR Code:', error);
+                const qrcodeDiv = document.getElementById('qrcode');
+                if (qrcodeDiv) qrcodeDiv.innerHTML = '<p style="color: red;">Erro ao gerar QR Code. Tente novamente.</p>';
+            }
+        }
 
-        // Carregar dados
+        function copiarUrl() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('✅ Link copiado para a área de transferência!');
+                addBotMessage('📋 Link copiado! Compartilhe com outras pessoas.', 'bot');
+            }).catch(() => {
+                alert('❌ Não foi possível copiar. Copie manualmente: ' + url);
+            });
+        }
+
+        function compartilharWhatsApp() {
+            const url = window.location.href;
+            window.open(`https://wa.me/?text=${encodeURIComponent("📢 Participa Sena - Sistema de Relatos Urbanos\n\nAcesse: " + url)}`, '_blank');
+        }
+
+        function compartilharTelegram() {
+            const url = window.location.href;
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent("📢 Participa Sena - Sistema de Relatos Urbanos")}`, '_blank');
+        }
+
+        function compartilharEmail() {
+            const url = window.location.href;
+            window.location.href = `mailto:?subject=${encodeURIComponent("Participa Sena - Portal de Relatos Urbanos")}&body=${encodeURIComponent("Olá! Conheça o Participa Sena, o portal de relatos urbanos da nossa cidade.\n\nAcesse: " + url)}`;
+        }
+
+        // ========== VERSÃO DESKTOP/MOBILE ==========
+        function detectarDispositivo() {
+            return window.innerWidth <= 768 ? 'mobile' : 'desktop';
+        }
+        
+        function aplicarVersao() {
+            const deviceType = detectarDispositivo();
+            let versaoAtiva = currentVersion;
+            if (currentVersion === 'auto') versaoAtiva = deviceType;
+            
+            document.body.classList.remove('force-desktop', 'force-mobile');
+            if (versaoAtiva === 'desktop') {
+                document.body.classList.add('force-desktop');
+                document.getElementById('versionBadge').innerHTML = '🖥️ Modo Desktop (forçado)';
+            } else if (versaoAtiva === 'mobile') {
+                document.body.classList.add('force-mobile');
+                document.getElementById('versionBadge').innerHTML = '📱 Modo Mobile (forçado)';
+            } else {
+                document.getElementById('versionBadge').innerHTML = deviceType === 'mobile' ? '📱 Modo Mobile (automático)' : '🖥️ Modo Desktop (automático)';
+            }
+            
+            document.getElementById('btnAutoVersion').classList.remove('active');
+            document.getElementById('btnDesktopVersion').classList.remove('active');
+            document.getElementById('btnMobileVersion').classList.remove('active');
+            if (currentVersion === 'auto') document.getElementById('btnAutoVersion').classList.add('active');
+            else if (currentVersion === 'desktop') document.getElementById('btnDesktopVersion').classList.add('active');
+            else if (currentVersion === 'mobile') document.getElementById('btnMobileVersion').classList.add('active');
+            
+            localStorage.setItem('user_version_preference', currentVersion);
+        }
+        
+        function setVersion(version) {
+            currentVersion = version;
+            aplicarVersao();
+            let msg = '';
+            if (version === 'auto') msg = '🤖 Modo automático ativado! O site se adaptará ao seu dispositivo.';
+            else if (version === 'desktop') msg = '🖥️ Modo Desktop ativado! Visualização otimizada para telas grandes.';
+            else if (version === 'mobile') msg = '📱 Modo Mobile ativado! Visualização otimizada para celular.';
+            addBotMessage(msg, 'bot');
+        }
+        
+        function carregarPreferenciaVersao() {
+            const saved = localStorage.getItem('user_version_preference');
+            if (saved && (saved === 'auto' || saved === 'desktop' || saved === 'mobile')) currentVersion = saved;
+            aplicarVersao();
+        }
+        
+        window.addEventListener('resize', function() { if (currentVersion === 'auto') aplicarVersao(); });
+
+        // ========== MENU MOBILE ==========
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('mobileMenuOverlay');
+            if(menu) menu.classList.toggle('open');
+            if(overlay) overlay.style.display = menu && menu.classList.contains('open') ? 'block' : 'none';
+        }
+
+        function mostrarPaginaMobile(pagina) {
+            mostrarPagina(pagina);
+            toggleMobileMenu();
+        }
+
+        // ========== FUNÇÕES PRINCIPAIS DO SISTEMA ==========
+        
         function carregarDados() {
             const savedRelatos = localStorage.getItem('relatos_portal');
             const savedUsuarios = localStorage.getItem('usuarios_portal');
@@ -1401,13 +1594,8 @@
             renderizarRelatos();
         }
 
-        function salvarRelatos() {
-            localStorage.setItem('relatos_portal', JSON.stringify(relatos));
-        }
-
-        function salvarUsuarios() {
-            localStorage.setItem('usuarios_portal', JSON.stringify(usuarios));
-        }
+        function salvarRelatos() { localStorage.setItem('relatos_portal', JSON.stringify(relatos)); }
+        function salvarUsuarios() { localStorage.setItem('usuarios_portal', JSON.stringify(usuarios)); }
 
         function validarCPF(cpf) {
             cpf = cpf.replace(/[^\d]/g, '');
@@ -1425,7 +1613,6 @@
             return resto === parseInt(cpf.charAt(10));
         }
 
-        // Cadastro
         document.getElementById('cadastroForm')?.addEventListener('submit', function(e) {
             e.preventDefault();
             const nome = document.getElementById('cadastro-nome').value;
@@ -1449,7 +1636,6 @@
             mostrarModalLogin();
         });
 
-        // Login
         document.getElementById('loginForm')?.addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
@@ -1471,13 +1657,22 @@
             const authDiv = document.getElementById('auth-buttons');
             const userDiv = document.getElementById('user-info');
             const userNameSpan = document.getElementById('user-name');
+            const mobileAuthDiv = document.getElementById('mobile-auth-buttons');
+            const mobileUserDiv = document.getElementById('mobile-user-info');
+            const mobileUserNameSpan = document.getElementById('mobile-user-name');
+            
             if (usuarioLogado) {
                 if (authDiv) authDiv.style.display = 'none';
                 if (userDiv) userDiv.style.display = 'flex';
                 if (userNameSpan) userNameSpan.textContent = usuarioLogado.nome.split(' ')[0];
+                if (mobileAuthDiv) mobileAuthDiv.style.display = 'none';
+                if (mobileUserDiv) mobileUserDiv.style.display = 'block';
+                if (mobileUserNameSpan) mobileUserNameSpan.textContent = usuarioLogado.nome.split(' ')[0];
             } else {
                 if (authDiv) authDiv.style.display = 'flex';
                 if (userDiv) userDiv.style.display = 'none';
+                if (mobileAuthDiv) mobileAuthDiv.style.display = 'block';
+                if (mobileUserDiv) mobileUserDiv.style.display = 'none';
             }
         }
 
@@ -1487,9 +1682,9 @@
             atualizarInterfaceUsuario();
             mostrarPagina('inicial');
             addBotMessage('👋 Até logo!', 'bot');
+            if (document.getElementById('mobileMenu')?.classList.contains('open')) toggleMobileMenu();
         }
 
-        // Relatos
         function registrarRelato(relato, isAnonimo = false) {
             relatos.push({
                 id: relatos.length + 1,
@@ -1503,7 +1698,7 @@
             salvarRelatos();
             atualizarEstatisticas();
             renderizarRelatos();
-            addBotMessage(`✅ Relato #${relatos.length} registrado!`, 'bot');
+            addBotMessage(`✅ Relato #${relatos.length} registrado! Em breve será analisado.`, 'bot');
         }
 
         document.getElementById('relatoForm')?.addEventListener('submit', function(e) {
@@ -1651,7 +1846,6 @@
             }
         }
 
-        // UI Functions
         function mostrarPagina(pagina) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pagina + '-page').classList.add('active');
@@ -1711,7 +1905,6 @@
             if (listaPage) listaPage.innerHTML = html;
         }
 
-        // Map
         function initMap() {
             map = L.map('map').setView([-9.0654, -68.6571], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -1745,13 +1938,16 @@
             if ('webkitSpeechRecognition' in window) {
                 recognition = new webkitSpeechRecognition();
                 recognition.lang = 'pt-BR';
-                recognition.onstart = () => { isListening = true; document.getElementById('voiceStatus').textContent = '🎤 Ouvindo...'; document.getElementById('voiceStartBtn').classList.add('listening'); };
-                recognition.onend = () => { isListening = false; document.getElementById('voiceStatus').textContent = 'Clique no microfone para falar'; document.getElementById('voiceStartBtn').classList.remove('listening'); };
-                recognition.onresult = (e) => { document.getElementById('botInput').value = e.results[0][0].transcript; sendMessage(); };
-            }
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.onstart = () => { isListening = true; document.getElementById('voiceStatus').textContent = '🎤 Ouvindo... Fale agora'; document.getElementById('voiceStartBtn').style.background = '#e63946'; };
+                recognition.onend = () => { isListening = false; document.getElementById('voiceStatus').textContent = '🎤 Clique para falar com o assistente'; document.getElementById('voiceStartBtn').style.background = 'var(--primary)'; };
+                recognition.onresult = (e) => { const texto = e.results[0][0].transcript; document.getElementById('botInput').value = texto; sendMessage(); };
+                recognition.onerror = () => { document.getElementById('voiceStatus').textContent = '🎤 Erro, tente novamente'; isListening = false; document.getElementById('voiceStartBtn').style.background = 'var(--primary)'; };
+            } else { document.getElementById('voiceStatus').textContent = '🎤 Voz não suportada'; }
         }
-        function startVoiceRecognition() { if (recognition) isListening ? recognition.stop() : recognition.start(); else alert('Voz não suportada'); }
-        function speakText() { const text = prompt('Texto para falar:'); if (text) { const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'pt-BR'; window.speechSynthesis.speak(utterance); } }
+        function startVoiceRecognition() { if (recognition) { if (isListening) recognition.stop(); else recognition.start(); } else alert('Seu navegador não suporta reconhecimento de voz.'); }
+        function speakText() { const text = prompt('Digite o texto que deseja ouvir:'); if (text && text.trim()) { const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'pt-BR'; utterance.rate = 0.9; window.speechSynthesis.speak(utterance); } }
         function stopSpeaking() { window.speechSynthesis.cancel(); }
 
         // Chat
@@ -1764,19 +1960,24 @@
             
             let resposta = '';
             const lower = text.toLowerCase();
-            if (lower.includes('relato')) resposta = `📝 Para fazer um relato, clique no botão "Relato Anônimo" ou acesse a página de Relatos.`;
-            else if (lower.includes('cadastro')) resposta = `📝 Clique em "Cadastrar" no menu superior. Você precisará de nome, CPF, e-mail e telefone.`;
-            else if (lower.includes('meus relatos')) resposta = usuarioLogado ? `📋 Acesse "Meus Relatos" no menu para ver seus relatos.` : `🔐 Faça login para ver seus relatos.`;
-            else if (lower.includes('estatística')) resposta = `📈 ${relatos.length} relatos no total, ${relatos.filter(r => r.status === 'resolvido').length} resolvidos.`;
-            else resposta = `Olá! Posso ajudar com: Relatos, Cadastro, Estatísticas ou Meus Relatos. Como posso ajudar?`;
+            if (lower.includes('relato') || lower.includes('denunciar')) resposta = `📝 Para fazer um relato, clique no botão "Relato Anônimo" no menu superior ou escolha uma categoria na página inicial.`;
+            else if (lower.includes('cadastro') || lower.includes('registrar')) resposta = `📝 Para se cadastrar, clique no botão "Cadastrar" no menu superior. Você precisará informar: nome completo, CPF, e-mail, telefone e criar uma senha.`;
+            else if (lower.includes('meus relatos')) resposta = usuarioLogado ? `📋 Acesse "Meus Relatos" no menu para ver todos os seus relatos.` : `🔐 Faça login primeiro para ver seus relatos pessoais.`;
+            else if (lower.includes('estatística') || lower.includes('dados')) { const total = relatos.length; const resolvidos = relatos.filter(r => r.status === 'resolvido').length; resposta = `📊 Estatísticas: ${total} relatos no total, ${resolvidos} resolvidos (${total > 0 ? Math.round(resolvidos/total*100) : 0}% de taxa de solução).`; }
+            else if (lower.includes('qr') || lower.includes('qrcode')) resposta = `📱 Na página inicial você encontra um QR Code para acessar o site pelo celular. Basta escanear com a câmera! Também é possível compartilhar o link via WhatsApp, Telegram ou E-mail.`;
+            else if (lower.includes('versão') || lower.includes('desktop') || lower.includes('mobile')) resposta = `💻 Você pode alternar entre as versões Desktop e Mobile usando os botões no topo da página: "Auto" (detecta automaticamente), "Desktop" (força visualização de computador) ou "Mobile" (força visualização de celular).`;
+            else resposta = `Olá! Sou o assistente do Participa Sena. Posso ajudar com: Relatos, Cadastro, Estatísticas, Meus Relatos, QR Code, Versão (Desktop/Mobile) ou Admin. Digite sua dúvida!`;
             
-            addBotMessage(resposta, 'bot');
+            setTimeout(() => addBotMessage(resposta, 'bot'), 300);
         }
 
         function addBotMessage(text, sender) {
             const messagesDiv = document.getElementById('botMessages');
             const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            messagesDiv.innerHTML += `<div class="message ${sender}"><div class="message-content">${text.replace(/\n/g, '<br>')}<div style="font-size: 0.7rem; opacity: 0.6;">${time}</div></div></div>`;
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `<div class="message-content">${text.replace(/\n/g, '<br>')}<div style="font-size: 0.7rem; opacity: 0.6; margin-top: 4px;">${time}</div></div>`;
+            messagesDiv.appendChild(messageDiv);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
@@ -1784,7 +1985,7 @@
             const chat = document.getElementById('botChat');
             chat.classList.toggle('minimized');
             if (!chat.classList.contains('minimized') && document.getElementById('botMessages').children.length === 0) {
-                addBotMessage("👋 Olá! Sou o assistente do Portal Cidadão. Como posso ajudar?", "bot");
+                addBotMessage("👋 Olá! Sou o assistente do Portal Cidadão. Como posso ajudar você hoje? Digite sua pergunta ou clique no microfone para falar.", "bot");
             }
         }
 
@@ -1798,21 +1999,29 @@
             if (v.length <= 11) { v = v.replace(/(\d{2})(\d)/, '($1) $2'); v = v.replace(/(\d{5})(\d)/, '$1-$2'); e.target.value = v; }
         });
 
-        // Close modals on outside click
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
         });
 
-        // Initialize
         function initVLibras() { try { new window.VLibras.Widget('https://vlibras.gov.br/app'); } catch(e) {} }
         
+        // Inicialização
         carregarDados();
         renderizarCategorias();
         renderizarNoticias();
         initMap();
         initSpeechRecognition();
         initVLibras();
+        carregarPreferenciaVersao();
         
+        // Aguardar o DOM carregar completamente antes de gerar o QR Code
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', gerarQRCode);
+        } else {
+            setTimeout(gerarQRCode, 500);
+        }
+        
+        // Expor funções globalmente
         window.mostrarPagina = mostrarPagina;
         window.mostrarModalLogin = mostrarModalLogin;
         window.mostrarModalCadastro = mostrarModalCadastro;
@@ -1837,9 +2046,16 @@
         window.stopSpeaking = stopSpeaking;
         window.sendMessage = sendMessage;
         window.toggleBot = toggleBot;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.mostrarPaginaMobile = mostrarPaginaMobile;
+        window.setVersion = setVersion;
+        window.copiarUrl = copiarUrl;
+        window.compartilharWhatsApp = compartilharWhatsApp;
+        window.compartilharTelegram = compartilharTelegram;
+        window.compartilharEmail = compartilharEmail;
         window.addBotMessage = addBotMessage;
         
-        setTimeout(() => addBotMessage("👋 Olá! Como posso ajudar você hoje?", "bot"), 1000);
+        setTimeout(() => addBotMessage("👋 Olá! Como posso ajudar você hoje? Digite 'ajuda' para ver os comandos disponíveis, ou use o QR Code na página inicial para acessar pelo celular!", "bot"), 1000);
     </script>
 </body>
 </html>
