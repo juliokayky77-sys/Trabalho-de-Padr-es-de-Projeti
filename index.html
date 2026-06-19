@@ -7,9 +7,57 @@
     <title>Participa Sena - Sistema de Relatos Urbanos</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://vlibras.gov.br/app/vlibras.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- QR Code Library - Versão estável -->
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script> /* Controle do tamanho da fonte */
+
+let currentFontSize = 100;
+
+// Aumentar texto
+function increaseFont() {
+    if (currentFontSize < 180) {
+        currentFontSize += 10;
+        document.documentElement.style.fontSize = currentFontSize + "%";
+    }
+}
+
+// Diminuir texto
+function decreaseFont() {
+    if (currentFontSize > 70) {
+        currentFontSize -= 10;
+        document.documentElement.style.fontSize = currentFontSize + "%";
+    }
+}
+
+// Restaurar tamanho padrão
+function resetFont() {
+    currentFontSize = 100;
+    document.documentElement.style.fontSize = "100%";
+}</script>
+<script> // Ativa ou desativa a guia
+function toggleReadingGuide() {
+
+    document
+        .getElementById("readingGuide")
+        .classList
+        .toggle("active");
+
+}
+
+// Faz a guia acompanhar o mouse
+document.addEventListener("mousemove", function(e){
+
+    const guide = document.getElementById("readingGuide");
+
+    if(guide.classList.contains("active")){
+
+        guide.style.top = e.clientY + "px";
+
+    }
+
+});</script>
     <style>
         * {
             margin: 0;
@@ -252,6 +300,24 @@
             color: white;
             padding: 48px 24px;
         }
+
+        /* Guia de leitura */
+    #readingGuide{
+        position:fixed;
+        left:0;
+        top:0;
+        width:100%;
+        height:4px;
+        background:#ffcc00;
+        pointer-events:none;
+        display:none;
+        z-index:99999;
+        box-shadow:0 0 8px rgba(0,0,0,.3);
+    }
+
+#readingGuide.active{
+    display:block;
+}
 
         .hero-content {
             max-width: 1400px;
@@ -619,6 +685,32 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+        }
+
+        /* FAQ, Politica e Termos Styles */
+        .legal-content h3 {
+            margin: 24px 0 12px 0;
+            color: var(--primary-dark);
+        }
+        .legal-content p, .legal-content ul {
+            margin-bottom: 14px;
+            color: var(--gray-800);
+            font-size: 0.95rem;
+        }
+        .legal-content ul {
+            padding-left: 20px;
+        }
+        .faq-item {
+            background: var(--gray-100);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        .faq-question {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 6px;
+            cursor: pointer;
         }
 
         /* Modal */
@@ -1072,26 +1164,85 @@
         .reading-guide.active { display: block; }
 
         body.high-contrast {
-            --primary: #000080;
-            --primary-dark: #000040;
-            --gray-800: #000000;
-            --gray-600: #333333;
-        }
-        body.high-contrast .hero { background: #000; }
+    background: #000 !important;
+    color: #FFF !important;
+}
+
+body.high-contrast .main-header,
+body.high-contrast .hero,
+body.high-contrast .timeline-container,
+body.high-contrast .noticia-card,
+body.high-contrast .categoria-card,
+body.high-contrast .modal-content,
+body.high-contrast footer,
+body.high-contrast .voice-bar,
+body.high-contrast .top-bar,
+body.high-contrast .stat-card-box,
+body.high-contrast .qrcode-section {
+    background: #000 !important;
+    color: #FFF !important;
+    border: 2px solid #FFD700 !important;
+}
+
+body.high-contrast button,
+body.high-contrast a {
+    color: #FFD700 !important;
+}
+
+body.high-contrast input,
+body.high-contrast textarea,
+body.high-contrast select {
+    background: #111 !important;
+    color: #FFF !important;
+    border: 2px solid #FFD700 !important;
+}
+
+body.high-contrast .logo-icon,
+body.high-contrast .nav-btn-primary,
+body.high-contrast .voice-btn {
+    background: #FFD700 !important;
+    color: #000 !important;
+}
         body.large-text { font-size: 18px; }
         body.no-animations * { animation: none !important; transition: none !important; }
         body.increased-spacing { line-height: 1.8; letter-spacing: 0.5px; }
-        body.dyslexia-friendly { font-family: 'OpenDyslexic', 'Comic Sans MS', 'Chalkboard SE', sans-serif; }
+        body.dyslexia-friendly { font-family: 'OpenDyslexic', 'Comic Sans MS', 'Chalkboard SE', sans-serif; 
+   button:focus,
+a:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 3px solid #FFD700;
+    outline-offset: 3px;
+}}
     </style>
 </head>
 <body>
     <!-- Accessibility Bar -->
     <div class="accessibility-bar">
         <button onclick="toggleHighContrast()">🌓 Alto Contraste</button>
-        <button onclick="toggleLargeText()">🔤 Texto Ampliado</button>
-        <button onclick="toggleSpacing()">📏 Espaçamento</button>
+       <button onclick="increaseFont()" aria-label="Aumentar tamanho do texto" title="Aumentar texto">
+    A+
+</button>
+
+<button onclick="decreaseFont()" aria-label="Diminuir tamanho do texto" title="Diminuir texto">
+    A-
+</button>
+
+<button onclick="resetFont()" aria-label="Restaurar tamanho do texto" title="Tamanho padrão">
+    A
+</button>
+<button onclick="toggleSpacing()"
+        aria-label="Aumentar espaçamento do texto"
+        title="Espaçamento">
+    📏 Espaçamento
+</button>
         <button onclick="toggleDyslexiaFont()">📖 Fonte Dislexia</button>
-        <button onclick="toggleReadingGuide()">📏 Guia de Leitura</button>
+<button onclick="toggleReadingGuide()"
+        aria-label="Ativar guia de leitura"
+        title="Guia de Leitura">
+    📖 Guia de Leitura
+</button>
         <button onclick="toggleAnimations()">⏸️ Parar Animações</button>
         <button onclick="resetAccessibility()">🔄 Resetar</button>
     </div>
@@ -1207,6 +1358,7 @@
 
     <!-- Main Content -->
     <main class="container">
+        <!-- Inicial Page -->
         <div id="inicial-page" class="page active">
             <div class="section-tabs">
                 <button class="tab-btn active" onclick="mudarAba('noticias')">📰 Últimas Notícias</button>
@@ -1246,7 +1398,7 @@
                 </div>
             </section>
 
-            <!-- QR CODE SECTION - CORRIGIDA -->
+            <!-- QR CODE SECTION -->
             <section class="qrcode-section">
                 <div class="qrcode-container">
                     <h2 style="color: var(--primary); margin-bottom: 10px;">📱 Acesse pelo Celular</h2>
@@ -1272,11 +1424,13 @@
             </section>
         </div>
 
+        <!-- Noticias Page -->
         <div id="noticias-page" class="page">
             <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
             <div class="noticias-grid" id="noticias-page-lista"></div>
         </div>
 
+        <!-- Relatos Page -->
         <div id="relatos-page" class="page">
             <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
             <div class="stats-grid">
@@ -1299,16 +1453,18 @@
             </div>
         </div>
 
+        <!-- Meus Relatos Page -->
         <div id="meus-relatos-page" class="page">
             <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
             <div class="timeline-container"><h3>📋 Meus Relatos</h3><div id="meus-relatos-lista"></div></div>
         </div>
 
+        <!-- Transparencia Page -->
         <div id="transparencia-page" class="page">
             <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
             <div class="timeline-container">
                 <h3>📊 Transparência Pública</h3>
-                <p style="margin: 16px 0;">Dados atualizados mensalmente • Exercício 2024</p>
+                <p style="margin: 16px 0;">Dados atualizados mensalmente • Exercício 2026</p>
                 <div style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead><tr style="background: var(--gray-100);"><th style="padding: 12px;">Secretaria</th><th>Orçamento</th><th>Executado</th><th>%</th></tr></thead>
@@ -1319,6 +1475,72 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <!-- FAQ PAGE -->
+        <div id="faq-page" class="page">
+            <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
+            <div class="timeline-container legal-content">
+                <h2>🙋 Perguntas Frequentes (FAQ)</h2>
+                <p>Encontre respostas rápidas para as principais dúvidas sobre o portal.</p>
+                
+                <div class="faq-item">
+                    <div class="faq-question">1. O que é o Participa Sena?</div>
+                    <div>É um canal de ouvidoria e relatos visuais urbanos onde o cidadão indica melhorias necessárias em Sena Madureira - AC.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">2. O relato anônimo é realmente seguro?</div>
+                    <div>Sim. Conforme a LGPD, os relatos anônimos não coletam metadados pessoais, endereços IP ou identificadores que possam comprometer seu anonimato.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">3. Por que preciso informar meu CPF no cadastro?</div>
+                    <div>O CPF atua como validador de unicidade para coibir relatos falsos (fakes) repetitivos, protegendo a integridade da plataforma.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">4. Qual o prazo para resolução do meu relato?</div>
+                    <div>Os relatos são triados em até 48 horas e encaminhados às secretarias competentes de acordo com o orçamento executado exposto em Transparência.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRIVACIDADE PAGE -->
+        <div id="privacidade-page" class="page">
+            <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
+            <div class="timeline-container legal-content">
+                <h2>🔒 Política de Privacidade (Conforme LGPD - Lei nº 13.709)</h2>
+                <p><strong>Última atualização:</strong> Junho de 2026.</p>
+                <p>Esta política descreve como tratamos e protegemos seus dados pessoais de acordo com os princípios da boa-fé, finalidade e adequação.</p>
+                
+                <h3>1. Dados Coletados</h3>
+                <p>Coletamos apenas o estritamente necessário para sua identificação técnica segura: Nome Completo, CPF, E-mail, Telefone e Endereço opcional.</p>
+                
+                <h3>2. Princípio da Necessidade e Minimização</h3>
+                <p>Seguimos rigidamente o <em>Princípio da Necessidade</em>. Não solicitamos nem armazenamos dados sensíveis (origem racial, convicção religiosa ou opiniões políticas). A coleta limita-se ao suporte regulatório de validação cidadã.</p>
+                
+                <h3>3. Direitos do Titular dos Dados</h3>
+                <p>O usuário possui o direito de confirmar a existência do tratamento de dados, acessar seus dados e requerer a correção de informações incompletas ou desatualizadas diretamente pelo e-mail: <strong>relatos@participasena.gov</strong>.</p>
+                
+                <h3>4. Segurança da Informação</h3>
+                <p>Adotamos medidas técnicas administrativas robustas para mitigar riscos de vazamentos, invasões ou acessos não autorizados à nossa base local criptografada.</p>
+            </div>
+        </div>
+
+        <!-- TERMOS DE USO PAGE -->
+        <div id="termos-page" class="page">
+            <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
+            <div class="timeline-container legal-content">
+                <h2>⚖️ Termos de Uso do Sistema</h2>
+                <p>Ao navegar ou cadastrar-se no Participa Sena, você concorda explicitamente com as regras de convivência social e técnica vigentes:</p>
+                
+                <h3>1. Responsabilidade do Conteúdo</h3>
+                <p>O cidadão é inteiramente responsável pela veracidade das descrições enviadas. Declarações falsas, caluniosas ou difamatórias direcionadas a servidores ou cidadãos resultarão na suspensão imediata da conta.</p>
+                
+                <h3>2. Uso de Imagens e Dados de Localização</h3>
+                <p>O recurso de geolocalização por mapa serve unicamente para fixar o marcador do incidente urbano e não rastreia as rotas de navegação do usuário de forma contínua.</p>
+                
+                <h3>3. Respeito Regulatório</h3>
+                <p>O portal atua em conformidade com as diretrizes e leis de transparência pública municipais e federais do Brasil.</p>
             </div>
         </div>
     </main>
@@ -1349,7 +1571,7 @@
     <div class="modal" id="modal-cadastro">
         <div class="modal-content">
             <h3 style="margin-bottom: 24px;">📝 Cadastro de Cidadão</h3>
-            <p style="margin-bottom: 16px; font-size: 0.8rem; color: var(--gray-600);">⚠️ CPF único para evitar relatos falsos. Dados protegidos pela LGPD.</p>
+            <p style="margin-bottom: 16px; font-size: 0.8rem; color: var(--gray-600);">⚠️ Seus dados pessoais serão tratados com confidencialidade para fins estritos de legitimação cidadã e prevenção de fraudes, em total conformidade com a LGPD.</p>
             <form id="cadastroForm">
                 <div class="form-group"><label>Nome Completo *</label><input type="text" id="cadastro-nome" required></div>
                 <div class="form-group"><label>CPF *</label><input type="text" id="cadastro-cpf" placeholder="000.000.000-00" maxlength="14" required></div>
@@ -1358,6 +1580,12 @@
                 <div class="form-group"><label>Endereço</label><input type="text" id="cadastro-endereco"></div>
                 <div class="form-group"><label>Senha *</label><input type="password" id="cadastro-senha" placeholder="Mínimo 6 caracteres" required></div>
                 <div class="form-group"><label>Confirmar Senha *</label><input type="password" id="cadastro-confirmar-senha" required></div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: flex-start; gap: 8px;">
+                        <input type="checkbox" required style="width: auto; margin-top: 4px;">
+                        <span>Li e aceito as condições de tratamento de dados da <a href="#" onclick="fecharModal('modal-cadastro'); mostrarPagina('privacidade')">Política de Privacidade</a> e dos <a href="#" onclick="fecharModal('modal-cadastro'); mostrarPagina('termos')">Termos de Uso</a>.</span>
+                    </label>
+                </div>
                 <button type="submit" class="nav-btn nav-btn-primary" style="width: 100%;">Cadastrar</button>
                 <button type="button" onclick="fecharModal('modal-cadastro')" style="margin-top: 12px; width: 100%;" class="nav-btn">Cancelar</button>
             </form>
@@ -1382,7 +1610,7 @@
     <div class="modal" id="modal-relato-anonimo">
         <div class="modal-content">
             <h3 style="margin-bottom: 24px;">🕵️ Relato Anônimo</h3>
-            <p style="margin-bottom: 16px; font-size: 0.8rem;">🔒 100% anônimo - nenhum dado pessoal será solicitado</p>
+            <p style="margin-bottom: 16px; font-size: 0.8rem;">🔒 100% seguro - Nenhum dado identificável de navegação ou IP é armazenado para este módulo em conformidade com o princípio de minimização da LGPD.</p>
             <form id="relatoAnonimoForm">
                 <div class="form-group"><label>Categoria *</label><select id="relato-anonimo-categoria" required><option value="">Selecione</option><option value="Buracos na rua">🕳️ Buracos na rua</option><option value="Iluminação pública">💡 Iluminação pública</option><option value="Lixo acumulado">🗑️ Lixo acumulado</option><option value="Esgoto a céu aberto">💩 Esgoto a céu aberto</option><option value="Segurança">🚔 Segurança</option><option value="Ruas não asfaltadas">🛣️ Ruas não asfaltadas</option></select></div>
                 <div class="form-group"><label>Endereço *</label><input type="text" id="relato-anonimo-endereco" required></div>
@@ -1409,19 +1637,16 @@
         <div class="footer-grid">
             <div class="footer-section"><h4>📢 Portal Cidadão</h4><p>Plataforma colaborativa para notícias e relatos urbanos.</p></div>
             <div class="footer-section"><h4>Links Rápidos</h4><ul><li><a href="#" onclick="event.preventDefault(); mostrarPagina('inicial')">Início</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('noticias')">Notícias</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('relatos')">Relatos</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('transparencia')">Transparência</a></li></ul></div>
+            <div class="footer-section"><h4>Links Legais e Suporte</h4><ul><li><a href="#" onclick="event.preventDefault(); mostrarPagina('faq')">🙋 Perguntas Frequentes (FAQ)</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('privacidade')">🔒 Política de Privacidade (LGPD)</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('termos')">⚖️ Termos de Uso</a></li></ul></div>
             <div class="footer-section"><h4>Contato</h4><ul><li>📞 +55 68 9912-3456</li><li>✉️ relatos@portalcidadao.gov</li><li>📍 Sena Madureira - AC</li></ul></div>
         </div>
-        <div class="footer-bottom"><p>&copy; 2024 Portal Cidadão - Todos os direitos reservados</p></div>
+        <div class="footer-bottom"><p>&copy; 2026 Portal Cidadão / Participa Sena - Em conformidade com a LGPD. Todos os direitos reservados</p></div>
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://vlibras.gov.br/app/vlibras.js"></script>
     
     <script>
-        // ============================================
-        // SISTEMA COMPLETO - QR CODE CORRIGIDO
-        // ============================================
-        
         let usuarioLogado = null;
         let relatos = [];
         let usuarios = [];
@@ -1438,9 +1663,9 @@
         ];
 
         const noticiasSimuladas = [
-            { titulo: "Vice-governadora Mailza destaca investimentos em Sena Madureira", categoria: "Infraestrutura", data: "10/01/2024", resumo: "A vice-governadora do Acre cumpriu agenda institucional...", imagem: "https://agencia.ac.gov.br/wp-content/uploads/2026/01/a3c67961-35d0-40cc-b8c8-64de5f6a5e8e-scaled.jpeg" },
-            { titulo: "Saúde recebe mais de R$ 21 milhões em emendas", categoria: "Saúde", data: "09/01/2024", resumo: "Recursos de emendas parlamentares para a saúde municipal...", imagem: "https://ac24horas.com/wp-content/uploads/2025/07/Imagem-do-WhatsApp-de-2025-07-23-as-08.43.18_1b9be883-scaled.webp" },
-            { titulo: "Prefeito discute saúde itinerante com senador", categoria: "Saúde", data: "09/01/2024", resumo: "Recursos para UBS fluvial atendendo comunidades ribeirinhas...", imagem: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTorXtcQIwSwRl3q-VjQGYEnCA6WLOiILjHHA&s" }
+            { titulo: "Vice-governadora Mailza destaca investimentos em Sena Madureira", categoria: "Infraestrutura", data: "10/01/2026", resumo: "A vice-governadora do Acre cumpriu agenda institucional...", imagem: "https://agencia.ac.gov.br/wp-content/uploads/2026/01/a3c67961-35d0-40cc-b8c8-64de5f6a5e8e-scaled.jpeg" },
+            { titulo: "Saúde recebe mais de R$ 21 milhões em emendas", categoria: "Saúde", data: "09/01/2026", resumo: "Recursos de emendas parlamentares para a saúde municipal...", imagem: "https://ac24horas.com/wp-content/uploads/2025/07/Imagem-do-WhatsApp-de-2025-07-23-as-08.43.18_1b9be883-scaled.webp" },
+            { titulo: "Prefeito discute saúde itinerante com senador", categoria: "Saúde", data: "09/01/2026", resumo: "Recursos para UBS fluvial atendendo comunidades ribeirinhas...", imagem: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTorXtcQIwSwRl3q-VjQGYEnCA6WLOiILjHHA&s" }
         ];
 
         // ========== FUNÇÃO DO QR CODE CORRIGIDA ==========
@@ -1450,18 +1675,10 @@
                 const qrcodeDiv = document.getElementById('qrcode');
                 const urlSpan = document.getElementById('currentUrl');
                 
-                if (!qrcodeDiv) {
-                    console.error('Elemento qrcode não encontrado');
-                    return;
-                }
-                
-                // Limpar conteúdo anterior
+                if (!qrcodeDiv) return;
                 qrcodeDiv.innerHTML = '';
-                
-                // Mostrar URL
                 if (urlSpan) urlSpan.textContent = url;
                 
-                // Criar QR Code usando a biblioteca corretamente
                 if (typeof QRCode !== 'undefined') {
                     new QRCode(qrcodeDiv, {
                         text: url,
@@ -1471,15 +1688,11 @@
                         colorLight: "#ffffff",
                         correctLevel: QRCode.CorrectLevel.H
                     });
-                    console.log('QR Code gerado com sucesso!');
                 } else {
-                    console.error('Biblioteca QRCode não carregada');
-                    qrcodeDiv.innerHTML = '<p style="color: red;">Erro ao carregar QR Code. Recarregue a página.</p>';
+                    qrcodeDiv.innerHTML = '<p style="color: red;">Erro ao carregar QR Code. Recarregue.</p>';
                 }
             } catch (error) {
-                console.error('Erro ao gerar QR Code:', error);
-                const qrcodeDiv = document.getElementById('qrcode');
-                if (qrcodeDiv) qrcodeDiv.innerHTML = '<p style="color: red;">Erro ao gerar QR Code. Tente novamente.</p>';
+                console.error(error);
             }
         }
 
@@ -1489,7 +1702,7 @@
                 alert('✅ Link copiado para a área de transferência!');
                 addBotMessage('📋 Link copiado! Compartilhe com outras pessoas.', 'bot');
             }).catch(() => {
-                alert('❌ Não foi possível copiar. Copie manualmente: ' + url);
+                alert('❌ Não foi possível copiar: ' + url);
             });
         }
 
@@ -1500,12 +1713,12 @@
 
         function compartilharTelegram() {
             const url = window.location.href;
-            window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent("📢 Participa Sena - Sistema de Relatos Urbanos")}`, '_blank');
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent("📢 Participa Sena")}`, '_blank');
         }
 
         function compartilharEmail() {
             const url = window.location.href;
-            window.location.href = `mailto:?subject=${encodeURIComponent("Participa Sena - Portal de Relatos Urbanos")}&body=${encodeURIComponent("Olá! Conheça o Participa Sena, o portal de relatos urbanos da nossa cidade.\n\nAcesse: " + url)}`;
+            window.location.href = `mailto:?subject=${encodeURIComponent("Participa Sena")}&body=${encodeURIComponent("Acesse: " + url)}`;
         }
 
         // ========== VERSÃO DESKTOP/MOBILE ==========
@@ -1542,520 +1755,12 @@
         function setVersion(version) {
             currentVersion = version;
             aplicarVersao();
-            let msg = '';
-            if (version === 'auto') msg = '🤖 Modo automático ativado! O site se adaptará ao seu dispositivo.';
-            else if (version === 'desktop') msg = '🖥️ Modo Desktop ativado! Visualização otimizada para telas grandes.';
-            else if (version === 'mobile') msg = '📱 Modo Mobile ativado! Visualização otimizada para celular.';
-            addBotMessage(msg, 'bot');
-        }
-        
-        function carregarPreferenciaVersao() {
-            const saved = localStorage.getItem('user_version_preference');
-            if (saved && (saved === 'auto' || saved === 'desktop' || saved === 'mobile')) currentVersion = saved;
-            aplicarVersao();
         }
         
         window.addEventListener('resize', function() { if (currentVersion === 'auto') aplicarVersao(); });
 
-        // ========== MENU MOBILE ==========
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
             const overlay = document.getElementById('mobileMenuOverlay');
             if(menu) menu.classList.toggle('open');
-            if(overlay) overlay.style.display = menu && menu.classList.contains('open') ? 'block' : 'none';
-        }
-
-        function mostrarPaginaMobile(pagina) {
-            mostrarPagina(pagina);
-            toggleMobileMenu();
-        }
-
-        // ========== FUNÇÕES PRINCIPAIS DO SISTEMA ==========
-        
-        function carregarDados() {
-            const savedRelatos = localStorage.getItem('relatos_portal');
-            const savedUsuarios = localStorage.getItem('usuarios_portal');
-            
-            if (savedRelatos) relatos = JSON.parse(savedRelatos);
-            if (savedUsuarios) usuarios = JSON.parse(savedUsuarios);
-            
-            if (usuarios.length === 0) {
-                usuarios.push({ id: 1, nome: "Administrador", email: "admin@portalcidadao.gov", cpf: "00000000000", telefone: "(68) 99999-9999", senha: "admin123", role: "admin", dataCadastro: new Date().toISOString() });
-                localStorage.setItem('usuarios_portal', JSON.stringify(usuarios));
-            }
-            
-            const savedUser = localStorage.getItem('usuario_logado');
-            if (savedUser) {
-                usuarioLogado = JSON.parse(savedUser);
-                atualizarInterfaceUsuario();
-            }
-            
-            atualizarEstatisticas();
-            renderizarRelatos();
-        }
-
-        function salvarRelatos() { localStorage.setItem('relatos_portal', JSON.stringify(relatos)); }
-        function salvarUsuarios() { localStorage.setItem('usuarios_portal', JSON.stringify(usuarios)); }
-
-        function validarCPF(cpf) {
-            cpf = cpf.replace(/[^\d]/g, '');
-            if (cpf.length !== 11) return false;
-            if (/^(\d)\1{10}$/.test(cpf)) return false;
-            let soma = 0;
-            for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
-            let resto = 11 - (soma % 11);
-            if (resto === 10 || resto === 11) resto = 0;
-            if (resto !== parseInt(cpf.charAt(9))) return false;
-            soma = 0;
-            for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
-            resto = 11 - (soma % 11);
-            if (resto === 10 || resto === 11) resto = 0;
-            return resto === parseInt(cpf.charAt(10));
-        }
-
-        document.getElementById('cadastroForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const nome = document.getElementById('cadastro-nome').value;
-            const cpf = document.getElementById('cadastro-cpf').value.replace(/[^\d]/g, '');
-            const email = document.getElementById('cadastro-email').value;
-            const telefone = document.getElementById('cadastro-telefone').value;
-            const endereco = document.getElementById('cadastro-endereco').value;
-            const senha = document.getElementById('cadastro-senha').value;
-            const confirmar = document.getElementById('cadastro-confirmar-senha').value;
-            
-            if (!validarCPF(cpf)) { alert('CPF inválido!'); return; }
-            if (senha !== confirmar) { alert('As senhas não coincidem!'); return; }
-            if (senha.length < 6) { alert('A senha deve ter no mínimo 6 caracteres!'); return; }
-            if (usuarios.find(u => u.cpf === cpf)) { alert('CPF já cadastrado!'); return; }
-            if (usuarios.find(u => u.email === email)) { alert('E-mail já cadastrado!'); return; }
-            
-            usuarios.push({ id: usuarios.length + 1, nome, cpf, email, telefone, endereco, senha, role: 'cidadao', dataCadastro: new Date().toISOString() });
-            salvarUsuarios();
-            alert('✅ Cadastro realizado! Faça login.');
-            fecharModal('modal-cadastro');
-            mostrarModalLogin();
-        });
-
-        document.getElementById('loginForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const senha = document.getElementById('login-senha').value;
-            const usuario = usuarios.find(u => u.email === email && u.senha === senha);
-            if (usuario) {
-                usuarioLogado = usuario;
-                localStorage.setItem('usuario_logado', JSON.stringify(usuario));
-                atualizarInterfaceUsuario();
-                fecharModal('modal-login');
-                addBotMessage(`👋 Olá ${usuario.nome}!`, 'bot');
-                mostrarPagina('inicial');
-            } else {
-                alert('E-mail ou senha incorretos!');
-            }
-        });
-
-        function atualizarInterfaceUsuario() {
-            const authDiv = document.getElementById('auth-buttons');
-            const userDiv = document.getElementById('user-info');
-            const userNameSpan = document.getElementById('user-name');
-            const mobileAuthDiv = document.getElementById('mobile-auth-buttons');
-            const mobileUserDiv = document.getElementById('mobile-user-info');
-            const mobileUserNameSpan = document.getElementById('mobile-user-name');
-            
-            if (usuarioLogado) {
-                if (authDiv) authDiv.style.display = 'none';
-                if (userDiv) userDiv.style.display = 'flex';
-                if (userNameSpan) userNameSpan.textContent = usuarioLogado.nome.split(' ')[0];
-                if (mobileAuthDiv) mobileAuthDiv.style.display = 'none';
-                if (mobileUserDiv) mobileUserDiv.style.display = 'block';
-                if (mobileUserNameSpan) mobileUserNameSpan.textContent = usuarioLogado.nome.split(' ')[0];
-            } else {
-                if (authDiv) authDiv.style.display = 'flex';
-                if (userDiv) userDiv.style.display = 'none';
-                if (mobileAuthDiv) mobileAuthDiv.style.display = 'block';
-                if (mobileUserDiv) mobileUserDiv.style.display = 'none';
-            }
-        }
-
-        function logout() {
-            usuarioLogado = null;
-            localStorage.removeItem('usuario_logado');
-            atualizarInterfaceUsuario();
-            mostrarPagina('inicial');
-            addBotMessage('👋 Até logo!', 'bot');
-            if (document.getElementById('mobileMenu')?.classList.contains('open')) toggleMobileMenu();
-        }
-
-        function registrarRelato(relato, isAnonimo = false) {
-            relatos.push({
-                id: relatos.length + 1,
-                ...relato,
-                data: new Date().toISOString(),
-                status: 'pendente',
-                anonimo: isAnonimo,
-                usuario_id: !isAnonimo && usuarioLogado ? usuarioLogado.id : null,
-                usuario_nome: !isAnonimo && usuarioLogado ? usuarioLogado.nome : 'Anônimo'
-            });
-            salvarRelatos();
-            atualizarEstatisticas();
-            renderizarRelatos();
-            addBotMessage(`✅ Relato #${relatos.length} registrado! Em breve será analisado.`, 'bot');
-        }
-
-        document.getElementById('relatoForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const isAnonimo = document.getElementById('relato-anonimo').checked;
-            if (!isAnonimo && !usuarioLogado) { alert('Faça login para relatos não anônimos!'); mostrarModalLogin(); return; }
-            registrarRelato({
-                categoria: document.getElementById('relato-categoria').value,
-                endereco: document.getElementById('relato-endereco').value,
-                bairro: document.getElementById('relato-bairro').value,
-                descricao: document.getElementById('relato-descricao').value
-            }, isAnonimo);
-            this.reset();
-            fecharModal('modal-relato');
-        });
-
-        document.getElementById('relatoAnonimoForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            registrarRelato({
-                categoria: document.getElementById('relato-anonimo-categoria').value,
-                endereco: document.getElementById('relato-anonimo-endereco').value,
-                bairro: document.getElementById('relato-anonimo-bairro').value,
-                descricao: document.getElementById('relato-anonimo-descricao').value
-            }, true);
-            this.reset();
-            fecharModal('modal-relato-anonimo');
-        });
-
-        function renderizarRelatos() {
-            const listaCompleta = document.getElementById('relatos-lista-completa');
-            const meusLista = document.getElementById('meus-relatos-lista');
-            const recentesLista = document.getElementById('inicial-relatos-lista');
-            const anonimosLista = document.getElementById('inicial-anonimos-lista');
-            const rankingLista = document.getElementById('inicial-ranking-lista');
-
-            if (listaCompleta) {
-                if (relatos.length === 0) listaCompleta.innerHTML = '<div class="empty-state">Nenhum relato registrado.</div>';
-                else listaCompleta.innerHTML = [...relatos].reverse().map(r => `
-                    <div class="relato-item ${r.status} ${r.anonimo ? 'anonimo' : ''}">
-                        <div class="relato-conteudo">
-                            <h4>${r.categoria} ${r.anonimo ? '🕵️' : ''}</h4>
-                            <div class="relato-meta">📍 ${r.endereco} • 🏘️ ${r.bairro} • 📅 ${new Date(r.data).toLocaleDateString('pt-BR')}</div>
-                            <p>${r.descricao}</p>
-                        </div>
-                        <span class="status-badge" style="background: ${r.status === 'resolvido' ? '#2e7d32' : r.status === 'andamento' ? '#ffb347' : '#ed6c02'}; color: white;">
-                            ${r.status === 'pendente' ? 'Pendente' : r.status === 'andamento' ? 'Em Andamento' : 'Resolvido'}
-                        </span>
-                    </div>
-                `).join('');
-            }
-
-            if (meusLista && usuarioLogado) {
-                const meus = relatos.filter(r => r.usuario_id === usuarioLogado.id && !r.anonimo);
-                if (meus.length === 0) meusLista.innerHTML = '<div class="empty-state">Você ainda não fez nenhum relato.</div>';
-                else meusLista.innerHTML = meus.map(r => `
-                    <div class="relato-item ${r.status}">
-                        <div class="relato-conteudo">
-                            <h4>${r.categoria}</h4>
-                            <p>${r.descricao.substring(0, 100)}...</p>
-                            <div class="relato-meta">📍 ${r.bairro} • 📅 ${new Date(r.data).toLocaleDateString('pt-BR')}</div>
-                        </div>
-                        <span class="status-badge">${r.status === 'pendente' ? 'Pendente' : r.status === 'andamento' ? 'Em Andamento' : 'Resolvido'}</span>
-                    </div>
-                `).join('');
-            }
-
-            if (recentesLista) {
-                const recentes = relatos.slice(-3).reverse();
-                if (recentes.length === 0) recentesLista.innerHTML = '<div class="empty-state">Nenhum relato recente.</div>';
-                else recentesLista.innerHTML = recentes.map(r => `
-                    <div class="relato-item ${r.status}">
-                        <div class="relato-conteudo">
-                            <h4>${r.categoria}</h4>
-                            <p>${r.descricao.substring(0, 100)}...</p>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            if (anonimosLista) {
-                const anonimos = relatos.filter(r => r.anonimo).slice(-3).reverse();
-                if (anonimos.length === 0) anonimosLista.innerHTML = '<div class="empty-state">Nenhum relato anônimo.</div>';
-                else anonimosLista.innerHTML = anonimos.map(r => `
-                    <div class="relato-item anonimo">
-                        <div class="relato-conteudo">
-                            <h4>${r.categoria} 🕵️</h4>
-                            <p>${r.descricao.substring(0, 100)}...</p>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            if (rankingLista) {
-                const bairrosMap = {};
-                relatos.forEach(r => bairrosMap[r.bairro] = (bairrosMap[r.bairro] || 0) + 1);
-                const ranking = Object.entries(bairrosMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
-                if (ranking.length === 0) rankingLista.innerHTML = '<div class="empty-state">Nenhum dado disponível.</div>';
-                else rankingLista.innerHTML = ranking.map(([bairro, total], i) => `
-                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--gray-50); border-radius: 8px; margin-bottom: 8px;">
-                        <span style="width: 28px; height: 28px; background: ${i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : '#cd7f32'}; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">${i + 1}</span>
-                        <span><strong>${bairro}</strong> - ${total} relatos</span>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function filtrarRelatos(filtro) {
-            const lista = document.getElementById('relatos-lista-completa');
-            if (!lista) return;
-            let filtrados = [...relatos].reverse();
-            if (filtro !== 'todos') filtrados = filtrados.filter(r => r.status === filtro);
-            if (filtrados.length === 0) lista.innerHTML = '<div class="empty-state">Nenhum relato encontrado.</div>';
-            else lista.innerHTML = filtrados.map(r => `
-                <div class="relato-item ${r.status} ${r.anonimo ? 'anonimo' : ''}">
-                    <div class="relato-conteudo">
-                        <h4>${r.categoria} ${r.anonimo ? '🕵️' : ''}</h4>
-                        <div class="relato-meta">📍 ${r.endereco} • 🏘️ ${r.bairro} • 📅 ${new Date(r.data).toLocaleDateString('pt-BR')}</div>
-                        <p>${r.descricao}</p>
-                    </div>
-                    <span class="status-badge">${r.status === 'pendente' ? 'Pendente' : r.status === 'andamento' ? 'Em Andamento' : 'Resolvido'}</span>
-                </div>
-            `).join('');
-            document.querySelectorAll('.filter-group .filter-btn').forEach(btn => btn.classList.remove('active'));
-            if (event && event.target) event.target.classList.add('active');
-        }
-
-        function atualizarEstatisticas() {
-            const total = relatos.length;
-            const resolvidos = relatos.filter(r => r.status === 'resolvido').length;
-            const anonimos = relatos.filter(r => r.anonimo).length;
-            const pendentes = relatos.filter(r => r.status === 'pendente').length;
-            const andamento = relatos.filter(r => r.status === 'andamento').length;
-            const taxa = total > 0 ? Math.round((resolvidos / total) * 100) : 0;
-            
-            document.getElementById('total-relatos').textContent = total;
-            document.getElementById('resolvidos-contador').textContent = resolvidos;
-            document.getElementById('anonimos-contador').textContent = anonimos;
-            document.getElementById('taxa-sucesso').textContent = taxa + '%';
-            
-            if (document.getElementById('total-relatos-page')) {
-                document.getElementById('total-relatos-page').textContent = total;
-                document.getElementById('pendentes-page').textContent = pendentes;
-                document.getElementById('andamento-page').textContent = andamento;
-                document.getElementById('resolvidos-page').textContent = resolvidos;
-            }
-        }
-
-        function mostrarPagina(pagina) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pagina + '-page').classList.add('active');
-            const hero = document.querySelector('.hero');
-            if (hero) hero.style.display = pagina === 'inicial' ? 'block' : 'none';
-        }
-
-        function mostrarModalLogin() { document.getElementById('modal-login').classList.add('active'); }
-        function mostrarModalCadastro() { document.getElementById('modal-cadastro').classList.add('active'); }
-        function mostrarModalRelato() { document.getElementById('modal-relato').classList.add('active'); }
-        function mostrarModalRelatoAnonimo() { document.getElementById('modal-relato-anonimo').classList.add('active'); }
-        function fecharModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
-
-        function mudarAba(aba) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            if (event && event.target) event.target.classList.add('active');
-            document.getElementById('inicial-noticias-section').style.display = aba === 'noticias' ? 'block' : 'none';
-            document.getElementById('inicial-relatos-section').style.display = aba === 'relatos' ? 'block' : 'none';
-            document.getElementById('inicial-ranking-section').style.display = aba === 'ranking' ? 'block' : 'none';
-            document.getElementById('inicial-anonimos-section').style.display = aba === 'anonimos' ? 'block' : 'none';
-        }
-
-        function buscarRelatos() {
-            const termo = document.getElementById('search-input').value;
-            if (termo) { mostrarPagina('relatos'); addBotMessage(`🔍 Buscando: ${termo}`, 'bot'); }
-        }
-
-        function abrirNoticia(titulo) { addBotMessage(`📰 ${titulo}`, 'bot'); }
-
-        function renderizarCategorias() {
-            const grid = document.getElementById('categorias-lista');
-            if (grid) grid.innerHTML = categoriasRelato.map(cat => `
-                <div class="categoria-card" onclick="mostrarModalRelato()">
-                    <div class="categoria-emoji">${cat.icone}</div>
-                    <div class="categoria-titulo">${cat.nome}</div>
-                    <div class="categoria-desc">${cat.desc}</div>
-                </div>
-            `).join('');
-        }
-
-        function renderizarNoticias() {
-            const lista = document.getElementById('noticias-lista');
-            const listaPage = document.getElementById('noticias-page-lista');
-            const html = noticiasSimuladas.map(n => `
-                <div class="noticia-card" onclick="abrirNoticia('${n.titulo}')">
-                    <div class="noticia-imagem" style="background-image: url('${n.imagem}');">
-                        <span class="noticia-categoria">${n.categoria}</span>
-                    </div>
-                    <div class="noticia-conteudo">
-                        <h3 class="noticia-titulo">${n.titulo}</h3>
-                        <div class="noticia-meta">📅 ${n.data}</div>
-                        <p class="noticia-resumo">${n.resumo}</p>
-                    </div>
-                </div>
-            `).join('');
-            if (lista) lista.innerHTML = html;
-            if (listaPage) listaPage.innerHTML = html;
-        }
-
-        function initMap() {
-            map = L.map('map').setView([-9.0654, -68.6571], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            L.marker([-9.0654, -68.6571]).addTo(map).bindPopup('Sena Madureira - AC');
-        }
-
-        function getUserLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => {
-                    map.setView([pos.coords.latitude, pos.coords.longitude], 15);
-                    L.marker([pos.coords.latitude, pos.coords.longitude]).addTo(map).bindPopup('Sua localização').openPopup();
-                });
-            } else alert('Geolocalização não suportada');
-        }
-
-        // Accessibility
-        function toggleHighContrast() { document.body.classList.toggle('high-contrast'); }
-        function toggleLargeText() { document.body.classList.toggle('large-text'); }
-        function toggleSpacing() { document.body.classList.toggle('increased-spacing'); }
-        function toggleDyslexiaFont() { document.body.classList.toggle('dyslexia-friendly'); }
-        function toggleReadingGuide() { document.getElementById('readingGuide').classList.toggle('active'); }
-        function toggleAnimations() { document.body.classList.toggle('no-animations'); }
-        function resetAccessibility() {
-            document.body.classList.remove('high-contrast', 'large-text', 'increased-spacing', 'dyslexia-friendly', 'no-animations');
-            document.getElementById('readingGuide').classList.remove('active');
-        }
-
-        // Voice
-        let recognition, isListening = false;
-        function initSpeechRecognition() {
-            if ('webkitSpeechRecognition' in window) {
-                recognition = new webkitSpeechRecognition();
-                recognition.lang = 'pt-BR';
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                recognition.onstart = () => { isListening = true; document.getElementById('voiceStatus').textContent = '🎤 Ouvindo... Fale agora'; document.getElementById('voiceStartBtn').style.background = '#e63946'; };
-                recognition.onend = () => { isListening = false; document.getElementById('voiceStatus').textContent = '🎤 Clique para falar com o assistente'; document.getElementById('voiceStartBtn').style.background = 'var(--primary)'; };
-                recognition.onresult = (e) => { const texto = e.results[0][0].transcript; document.getElementById('botInput').value = texto; sendMessage(); };
-                recognition.onerror = () => { document.getElementById('voiceStatus').textContent = '🎤 Erro, tente novamente'; isListening = false; document.getElementById('voiceStartBtn').style.background = 'var(--primary)'; };
-            } else { document.getElementById('voiceStatus').textContent = '🎤 Voz não suportada'; }
-        }
-        function startVoiceRecognition() { if (recognition) { if (isListening) recognition.stop(); else recognition.start(); } else alert('Seu navegador não suporta reconhecimento de voz.'); }
-        function speakText() { const text = prompt('Digite o texto que deseja ouvir:'); if (text && text.trim()) { const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'pt-BR'; utterance.rate = 0.9; window.speechSynthesis.speak(utterance); } }
-        function stopSpeaking() { window.speechSynthesis.cancel(); }
-
-        // Chat
-        async function sendMessage() {
-            const input = document.getElementById('botInput');
-            const text = input.value.trim();
-            if (!text) return;
-            addBotMessage(text, 'user');
-            input.value = '';
-            
-            let resposta = '';
-            const lower = text.toLowerCase();
-            if (lower.includes('relato') || lower.includes('denunciar')) resposta = `📝 Para fazer um relato, clique no botão "Relato Anônimo" no menu superior ou escolha uma categoria na página inicial.`;
-            else if (lower.includes('cadastro') || lower.includes('registrar')) resposta = `📝 Para se cadastrar, clique no botão "Cadastrar" no menu superior. Você precisará informar: nome completo, CPF, e-mail, telefone e criar uma senha.`;
-            else if (lower.includes('meus relatos')) resposta = usuarioLogado ? `📋 Acesse "Meus Relatos" no menu para ver todos os seus relatos.` : `🔐 Faça login primeiro para ver seus relatos pessoais.`;
-            else if (lower.includes('estatística') || lower.includes('dados')) { const total = relatos.length; const resolvidos = relatos.filter(r => r.status === 'resolvido').length; resposta = `📊 Estatísticas: ${total} relatos no total, ${resolvidos} resolvidos (${total > 0 ? Math.round(resolvidos/total*100) : 0}% de taxa de solução).`; }
-            else if (lower.includes('qr') || lower.includes('qrcode')) resposta = `📱 Na página inicial você encontra um QR Code para acessar o site pelo celular. Basta escanear com a câmera! Também é possível compartilhar o link via WhatsApp, Telegram ou E-mail.`;
-            else if (lower.includes('versão') || lower.includes('desktop') || lower.includes('mobile')) resposta = `💻 Você pode alternar entre as versões Desktop e Mobile usando os botões no topo da página: "Auto" (detecta automaticamente), "Desktop" (força visualização de computador) ou "Mobile" (força visualização de celular).`;
-            else resposta = `Olá! Sou o assistente do Participa Sena. Posso ajudar com: Relatos, Cadastro, Estatísticas, Meus Relatos, QR Code, Versão (Desktop/Mobile) ou Admin. Digite sua dúvida!`;
-            
-            setTimeout(() => addBotMessage(resposta, 'bot'), 300);
-        }
-
-        function addBotMessage(text, sender) {
-            const messagesDiv = document.getElementById('botMessages');
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            messageDiv.innerHTML = `<div class="message-content">${text.replace(/\n/g, '<br>')}<div style="font-size: 0.7rem; opacity: 0.6; margin-top: 4px;">${time}</div></div>`;
-            messagesDiv.appendChild(messageDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        function toggleBot() {
-            const chat = document.getElementById('botChat');
-            chat.classList.toggle('minimized');
-            if (!chat.classList.contains('minimized') && document.getElementById('botMessages').children.length === 0) {
-                addBotMessage("👋 Olá! Sou o assistente do Portal Cidadão. Como posso ajudar você hoje? Digite sua pergunta ou clique no microfone para falar.", "bot");
-            }
-        }
-
-        // Masks
-        document.getElementById('cadastro-cpf')?.addEventListener('input', function(e) {
-            let v = e.target.value.replace(/\D/g, '');
-            if (v.length <= 11) { v = v.replace(/(\d{3})(\d)/, '$1.$2'); v = v.replace(/(\d{3})(\d)/, '$1.$2'); v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2'); e.target.value = v; }
-        });
-        document.getElementById('cadastro-telefone')?.addEventListener('input', function(e) {
-            let v = e.target.value.replace(/\D/g, '');
-            if (v.length <= 11) { v = v.replace(/(\d{2})(\d)/, '($1) $2'); v = v.replace(/(\d{5})(\d)/, '$1-$2'); e.target.value = v; }
-        });
-
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
-        });
-
-        function initVLibras() { try { new window.VLibras.Widget('https://vlibras.gov.br/app'); } catch(e) {} }
-        
-        // Inicialização
-        carregarDados();
-        renderizarCategorias();
-        renderizarNoticias();
-        initMap();
-        initSpeechRecognition();
-        initVLibras();
-        carregarPreferenciaVersao();
-        
-        // Aguardar o DOM carregar completamente antes de gerar o QR Code
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', gerarQRCode);
-        } else {
-            setTimeout(gerarQRCode, 500);
-        }
-        
-        // Expor funções globalmente
-        window.mostrarPagina = mostrarPagina;
-        window.mostrarModalLogin = mostrarModalLogin;
-        window.mostrarModalCadastro = mostrarModalCadastro;
-        window.mostrarModalRelato = mostrarModalRelato;
-        window.mostrarModalRelatoAnonimo = mostrarModalRelatoAnonimo;
-        window.fecharModal = fecharModal;
-        window.logout = logout;
-        window.filtrarRelatos = filtrarRelatos;
-        window.mudarAba = mudarAba;
-        window.buscarRelatos = buscarRelatos;
-        window.abrirNoticia = abrirNoticia;
-        window.getUserLocation = getUserLocation;
-        window.toggleHighContrast = toggleHighContrast;
-        window.toggleLargeText = toggleLargeText;
-        window.toggleSpacing = toggleSpacing;
-        window.toggleDyslexiaFont = toggleDyslexiaFont;
-        window.toggleReadingGuide = toggleReadingGuide;
-        window.toggleAnimations = toggleAnimations;
-        window.resetAccessibility = resetAccessibility;
-        window.startVoiceRecognition = startVoiceRecognition;
-        window.speakText = speakText;
-        window.stopSpeaking = stopSpeaking;
-        window.sendMessage = sendMessage;
-        window.toggleBot = toggleBot;
-        window.toggleMobileMenu = toggleMobileMenu;
-        window.mostrarPaginaMobile = mostrarPaginaMobile;
-        window.setVersion = setVersion;
-        window.copiarUrl = copiarUrl;
-        window.compartilharWhatsApp = compartilharWhatsApp;
-        window.compartilharTelegram = compartilharTelegram;
-        window.compartilharEmail = compartilharEmail;
-        window.addBotMessage = addBotMessage;
-        
-        setTimeout(() => addBotMessage("👋 Olá! Como posso ajudar você hoje? Digite 'ajuda' para ver os comandos disponíveis, ou use o QR Code na página inicial para acessar pelo celular!", "bot"), 1000);
-    </script>
-</body>
-</html>
+            if(overlay) overlay.style.dis
