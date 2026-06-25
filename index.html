@@ -7,63 +7,10 @@
     <title>Participa Sena - Sistema de Relatos Urbanos</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://vlibras.gov.br/app/vlibras.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- QR Code Library - Versão estável -->
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-    <script> /* Controle do tamanho da fonte */
-
-let currentFontSize = 100;
-
-// Aumentar texto
-function increaseFont() {
-    if (currentFontSize < 180) {
-        currentFontSize += 10;
-        document.documentElement.style.fontSize = currentFontSize + "%";
-    }
-}
-
-// Diminuir texto
-function decreaseFont() {
-    if (currentFontSize > 70) {
-        currentFontSize -= 10;
-        document.documentElement.style.fontSize = currentFontSize + "%";
-    }
-}
-
-// Restaurar tamanho padrão
-function resetFont() {
-    currentFontSize = 100;
-    document.documentElement.style.fontSize = "100%";
-}</script>
-<script> // Ativa ou desativa a guia
-function toggleReadingGuide() {
-
-    document
-        .getElementById("readingGuide")
-        .classList
-        .toggle("active");
-
-}
-
-// Faz a guia acompanhar o mouse
-document.addEventListener("mousemove", function(e){
-
-    const guide = document.getElementById("readingGuide");
-
-    if(guide.classList.contains("active")){
-
-        guide.style.top = e.clientY + "px";
-
-    }
-
-});</script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --primary: #1a4d8c;
@@ -92,7 +39,6 @@ document.addEventListener("mousemove", function(e){
             line-height: 1.5;
         }
 
-        /* Accessibility Panel */
         .accessibility-bar {
             background: var(--gray-800);
             color: white;
@@ -103,7 +49,6 @@ document.addEventListener("mousemove", function(e){
             flex-wrap: wrap;
             font-size: 0.8rem;
         }
-
         .accessibility-bar button {
             background: transparent;
             border: none;
@@ -114,13 +59,8 @@ document.addEventListener("mousemove", function(e){
             font-size: 0.8rem;
             transition: all 0.2s;
         }
+        .accessibility-bar button:hover { background: rgba(255,255,255,0.1); color: white; }
 
-        .accessibility-bar button:hover {
-            background: rgba(255,255,255,0.1);
-            color: white;
-        }
-
-        /* Voice Bar */
         .voice-bar {
             background: var(--white);
             border-bottom: 1px solid var(--gray-200);
@@ -130,7 +70,6 @@ document.addEventListener("mousemove", function(e){
             justify-content: flex-end;
             gap: 12px;
         }
-
         .voice-btn {
             background: var(--primary);
             border: none;
@@ -144,18 +83,9 @@ document.addEventListener("mousemove", function(e){
             justify-content: center;
             transition: all 0.2s;
         }
+        .voice-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
+        .voice-status { color: var(--gray-600); font-size: 0.85rem; }
 
-        .voice-btn:hover {
-            background: var(--primary-dark);
-            transform: scale(1.05);
-        }
-
-        .voice-status {
-            color: var(--gray-600);
-            font-size: 0.85rem;
-        }
-
-        /* Top Bar */
         .top-bar {
             background: var(--primary-dark);
             color: white;
@@ -167,14 +97,8 @@ document.addEventListener("mousemove", function(e){
             flex-wrap: wrap;
             gap: 16px;
         }
+        .contact-info { display: flex; gap: 24px; align-items: center; }
 
-        .contact-info {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        /* Header */
         .main-header {
             background: var(--white);
             box-shadow: var(--shadow-sm);
@@ -183,7 +107,6 @@ document.addEventListener("mousemove", function(e){
             z-index: 100;
             padding: 16px 24px;
         }
-
         .header-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -193,14 +116,7 @@ document.addEventListener("mousemove", function(e){
             flex-wrap: wrap;
             gap: 20px;
         }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
-
+        .logo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .logo-icon {
             width: 48px;
             height: 48px;
@@ -212,27 +128,10 @@ document.addEventListener("mousemove", function(e){
             font-size: 1.8rem;
             color: white;
         }
+        .logo-text h1 { font-size: 1.5rem; color: var(--primary-dark); line-height: 1.2; }
+        .logo-text span { font-size: 0.75rem; color: var(--gray-600); letter-spacing: 1px; }
 
-        .logo-text h1 {
-            font-size: 1.5rem;
-            color: var(--primary-dark);
-            line-height: 1.2;
-        }
-
-        .logo-text span {
-            font-size: 0.75rem;
-            color: var(--gray-600);
-            letter-spacing: 1px;
-        }
-
-        /* Navigation */
-        .nav-menu {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
+        .nav-menu { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
         .nav-btn {
             padding: 8px 20px;
             border-radius: 40px;
@@ -244,35 +143,15 @@ document.addEventListener("mousemove", function(e){
             background: transparent;
             color: var(--gray-800);
         }
+        .nav-btn:hover { background: var(--gray-100); }
+        .nav-btn-primary { background: var(--primary); color: white; }
+        .nav-btn-primary:hover { background: var(--primary-dark); }
+        .nav-btn-secondary { background: var(--secondary); color: white; }
+        .nav-btn-outline { border: 1px solid var(--primary); color: var(--primary); }
+        .nav-btn-outline:hover { background: var(--primary-light); }
+        .nav-btn-success { background: var(--success); color: white; }
+        .nav-btn-success:hover { background: #1b5e20; }
 
-        .nav-btn:hover {
-            background: var(--gray-100);
-        }
-
-        .nav-btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .nav-btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .nav-btn-secondary {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .nav-btn-outline {
-            border: 1px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .nav-btn-outline:hover {
-            background: var(--primary-light);
-        }
-
-        /* User info */
         .user-info {
             display: flex;
             align-items: center;
@@ -281,7 +160,6 @@ document.addEventListener("mousemove", function(e){
             padding: 4px 16px 4px 8px;
             border-radius: 40px;
         }
-
         .user-avatar {
             width: 36px;
             height: 36px;
@@ -294,31 +172,11 @@ document.addEventListener("mousemove", function(e){
             font-weight: bold;
         }
 
-        /* Hero Section */
         .hero {
             background: linear-gradient(135deg, var(--primary-dark), var(--primary));
             color: white;
             padding: 48px 24px;
         }
-
-        /* Guia de leitura */
-    #readingGuide{
-        position:fixed;
-        left:0;
-        top:0;
-        width:100%;
-        height:4px;
-        background:#ffcc00;
-        pointer-events:none;
-        display:none;
-        z-index:99999;
-        box-shadow:0 0 8px rgba(0,0,0,.3);
-    }
-
-#readingGuide.active{
-    display:block;
-}
-
         .hero-content {
             max-width: 1400px;
             margin: 0 auto;
@@ -328,43 +186,13 @@ document.addEventListener("mousemove", function(e){
             flex-wrap: wrap;
             gap: 40px;
         }
-
-        .hero-text {
-            flex: 1;
-        }
-
-        .hero-text h2 {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
-        }
-
-        .hero-text p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 24px;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 32px;
-            flex-wrap: wrap;
-        }
-
-        .stat-card {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #ffb347;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            opacity: 0.8;
-        }
-
+        .hero-text { flex: 1; }
+        .hero-text h2 { font-size: 2.5rem; margin-bottom: 16px; }
+        .hero-text p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 24px; }
+        .hero-stats { display: flex; gap: 32px; flex-wrap: wrap; }
+        .stat-card { text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: 700; color: #ffb347; }
+        .stat-label { font-size: 0.85rem; opacity: 0.8; }
         .hero-search {
             background: white;
             border-radius: 60px;
@@ -372,7 +200,6 @@ document.addEventListener("mousemove", function(e){
             display: flex;
             min-width: 320px;
         }
-
         .hero-search input {
             flex: 1;
             padding: 14px 20px;
@@ -381,7 +208,6 @@ document.addEventListener("mousemove", function(e){
             font-size: 1rem;
             outline: none;
         }
-
         .hero-search button {
             padding: 14px 28px;
             border: none;
@@ -392,14 +218,7 @@ document.addEventListener("mousemove", function(e){
             cursor: pointer;
         }
 
-        /* Container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 32px 24px;
-        }
-
-        /* Tabs */
+        .container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
         .section-tabs {
             display: flex;
             gap: 8px;
@@ -408,7 +227,6 @@ document.addEventListener("mousemove", function(e){
             padding-bottom: 8px;
             flex-wrap: wrap;
         }
-
         .tab-btn {
             padding: 10px 24px;
             border: none;
@@ -420,25 +238,14 @@ document.addEventListener("mousemove", function(e){
             border-radius: 40px;
             transition: all 0.2s;
         }
+        .tab-btn:hover { background: var(--gray-100); color: var(--primary); }
+        .tab-btn.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
 
-        .tab-btn:hover {
-            background: var(--gray-100);
-            color: var(--primary);
-        }
-
-        .tab-btn.active {
-            background: var(--primary-light);
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        /* Cards */
         .noticias-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 24px;
         }
-
         .noticia-card {
             background: white;
             border-radius: var(--border-radius);
@@ -447,19 +254,13 @@ document.addEventListener("mousemove", function(e){
             transition: all 0.2s;
             cursor: pointer;
         }
-
-        .noticia-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-
+        .noticia-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
         .noticia-imagem {
             height: 180px;
             background-size: cover;
             background-position: center;
             position: relative;
         }
-
         .noticia-categoria {
             position: absolute;
             top: 12px;
@@ -470,39 +271,17 @@ document.addEventListener("mousemove", function(e){
             border-radius: 20px;
             font-size: 0.75rem;
         }
+        .noticia-conteudo { padding: 20px; }
+        .noticia-titulo { font-size: 1.1rem; margin-bottom: 8px; font-weight: 600; }
+        .noticia-meta { display: flex; gap: 16px; color: var(--gray-600); font-size: 0.75rem; margin-bottom: 12px; }
+        .noticia-resumo { color: var(--gray-600); font-size: 0.85rem; line-height: 1.5; }
 
-        .noticia-conteudo {
-            padding: 20px;
-        }
-
-        .noticia-titulo {
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .noticia-meta {
-            display: flex;
-            gap: 16px;
-            color: var(--gray-600);
-            font-size: 0.75rem;
-            margin-bottom: 12px;
-        }
-
-        .noticia-resumo {
-            color: var(--gray-600);
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        /* Categories Grid */
         .categorias-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin: 32px 0;
         }
-
         .categoria-card {
             background: white;
             border-radius: var(--border-radius);
@@ -512,29 +291,11 @@ document.addEventListener("mousemove", function(e){
             transition: all 0.2s;
             border: 1px solid var(--gray-200);
         }
+        .categoria-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .categoria-emoji { font-size: 2.5rem; margin-bottom: 12px; }
+        .categoria-titulo { font-weight: 600; margin-bottom: 4px; }
+        .categoria-desc { font-size: 0.8rem; color: var(--gray-600); }
 
-        .categoria-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary);
-        }
-
-        .categoria-emoji {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-        }
-
-        .categoria-titulo {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .categoria-desc {
-            font-size: 0.8rem;
-            color: var(--gray-600);
-        }
-
-        /* Relato Item */
         .relato-item {
             background: white;
             border-radius: var(--border-radius);
@@ -548,28 +309,15 @@ document.addEventListener("mousemove", function(e){
             flex-wrap: wrap;
             gap: 16px;
         }
-
         .relato-item.pendente { border-left-color: var(--warning); }
         .relato-item.andamento { border-left-color: #ffb347; }
         .relato-item.resolvido { border-left-color: var(--success); }
         .relato-item.anonimo { background: var(--primary-light); }
+        .relato-item.rejeitado { border-left-color: var(--secondary); background: #fff0f0; opacity: 0.8; }
 
-        .relato-conteudo {
-            flex: 1;
-        }
-
-        .relato-conteudo h4 {
-            margin-bottom: 8px;
-        }
-
-        .relato-meta {
-            display: flex;
-            gap: 16px;
-            font-size: 0.8rem;
-            color: var(--gray-600);
-            margin: 8px 0;
-        }
-
+        .relato-conteudo { flex: 1; }
+        .relato-conteudo h4 { margin-bottom: 8px; }
+        .relato-meta { display: flex; gap: 16px; font-size: 0.8rem; color: var(--gray-600); margin: 8px 0; }
         .status-badge {
             padding: 4px 12px;
             border-radius: 20px;
@@ -577,14 +325,12 @@ document.addEventListener("mousemove", function(e){
             font-weight: 600;
         }
 
-        /* Timeline Container */
         .timeline-container {
             background: white;
             border-radius: var(--border-radius);
             padding: 24px;
             box-shadow: var(--shadow-sm);
         }
-
         .timeline-header {
             display: flex;
             justify-content: space-between;
@@ -593,13 +339,7 @@ document.addEventListener("mousemove", function(e){
             flex-wrap: wrap;
             gap: 16px;
         }
-
-        .filter-group {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
+        .filter-group { display: flex; gap: 8px; flex-wrap: wrap; }
         .filter-btn {
             padding: 6px 16px;
             border: 1px solid var(--gray-200);
@@ -609,26 +349,15 @@ document.addEventListener("mousemove", function(e){
             font-size: 0.85rem;
             transition: all 0.2s;
         }
+        .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .filter-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .filter-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             margin-bottom: 32px;
         }
-
         .stat-card-box {
             background: white;
             border-radius: var(--border-radius);
@@ -637,42 +366,17 @@ document.addEventListener("mousemove", function(e){
             box-shadow: var(--shadow-sm);
             border-bottom: 3px solid var(--primary);
         }
+        .stat-number-large { font-size: 2rem; font-weight: 700; color: var(--primary); }
 
-        .stat-number-large {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        /* Map Section */
         .map-section {
             background: var(--primary-dark);
             color: white;
             padding: 48px 24px;
         }
-
-        .map-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .map-title {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .map-title h2 {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-        }
-
-        #map {
-            height: 400px;
-            width: 100%;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-        }
-
+        .map-container { max-width: 1400px; margin: 0 auto; }
+        .map-title { text-align: center; margin-bottom: 24px; }
+        .map-title h2 { font-size: 1.8rem; margin-bottom: 8px; }
+        #map { height: 400px; width: 100%; border-radius: var(--border-radius); overflow: hidden; }
         .location-btn {
             background: white;
             color: var(--primary);
@@ -687,33 +391,6 @@ document.addEventListener("mousemove", function(e){
             gap: 8px;
         }
 
-        /* FAQ, Politica e Termos Styles */
-        .legal-content h3 {
-            margin: 24px 0 12px 0;
-            color: var(--primary-dark);
-        }
-        .legal-content p, .legal-content ul {
-            margin-bottom: 14px;
-            color: var(--gray-800);
-            font-size: 0.95rem;
-        }
-        .legal-content ul {
-            padding-left: 20px;
-        }
-        .faq-item {
-            background: var(--gray-100);
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-        .faq-question {
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 6px;
-            cursor: pointer;
-        }
-
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -726,11 +403,7 @@ document.addEventListener("mousemove", function(e){
             align-items: center;
             justify-content: center;
         }
-
-        .modal.active {
-            display: flex;
-        }
-
+        .modal.active { display: flex; }
         .modal-content {
             background: white;
             border-radius: var(--border-radius);
@@ -740,42 +413,25 @@ document.addEventListener("mousemove", function(e){
             max-height: 90vh;
             overflow-y: auto;
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 6px;
-            font-size: 0.9rem;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 6px; font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 10px 14px;
             border: 1px solid var(--gray-200);
             border-radius: 8px;
             font-size: 0.9rem;
         }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
         }
 
-        /* Footer */
         footer {
             background: var(--gray-800);
             color: white;
             padding: 48px 24px 24px;
         }
-
         .footer-grid {
             max-width: 1400px;
             margin: 0 auto;
@@ -784,30 +440,11 @@ document.addEventListener("mousemove", function(e){
             gap: 40px;
             margin-bottom: 32px;
         }
-
-        .footer-section h4 {
-            margin-bottom: 16px;
-            font-size: 1rem;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 8px;
-        }
-
-        .footer-section a {
-            color: var(--gray-400);
-            text-decoration: none;
-            font-size: 0.85rem;
-        }
-
-        .footer-section a:hover {
-            color: white;
-        }
-
+        .footer-section h4 { margin-bottom: 16px; font-size: 1rem; }
+        .footer-section ul { list-style: none; }
+        .footer-section ul li { margin-bottom: 8px; }
+        .footer-section a { color: var(--gray-400); text-decoration: none; font-size: 0.85rem; }
+        .footer-section a:hover { color: white; }
         .footer-bottom {
             text-align: center;
             padding-top: 24px;
@@ -816,14 +453,12 @@ document.addEventListener("mousemove", function(e){
             color: var(--gray-400);
         }
 
-        /* Bot Chat */
         .bot-container {
             position: fixed;
             bottom: 24px;
             right: 24px;
             z-index: 999;
         }
-
         .bot-avatar {
             width: 60px;
             height: 60px;
@@ -838,11 +473,7 @@ document.addEventListener("mousemove", function(e){
             border: 2px solid white;
             transition: transform 0.2s;
         }
-
-        .bot-avatar:hover {
-            transform: scale(1.05);
-        }
-
+        .bot-avatar:hover { transform: scale(1.05); }
         .bot-chat {
             width: 350px;
             height: 500px;
@@ -854,11 +485,7 @@ document.addEventListener("mousemove", function(e){
             flex-direction: column;
             overflow: hidden;
         }
-
-        .bot-chat.minimized {
-            display: none;
-        }
-
+        .bot-chat.minimized { display: none; }
         .bot-header {
             background: var(--primary);
             color: white;
@@ -868,22 +495,10 @@ document.addEventListener("mousemove", function(e){
             gap: 12px;
             cursor: pointer;
         }
-
-        .bot-messages {
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
-            background: var(--gray-50);
-        }
-
-        .message {
-            margin-bottom: 12px;
-            display: flex;
-        }
-
+        .bot-messages { flex: 1; padding: 16px; overflow-y: auto; background: var(--gray-50); }
+        .message { margin-bottom: 12px; display: flex; }
         .message.bot { justify-content: flex-start; }
         .message.user { justify-content: flex-end; }
-
         .message-content {
             background: white;
             padding: 10px 14px;
@@ -892,12 +507,7 @@ document.addEventListener("mousemove", function(e){
             font-size: 0.85rem;
             box-shadow: var(--shadow-sm);
         }
-
-        .message.user .message-content {
-            background: var(--primary);
-            color: white;
-        }
-
+        .message.user .message-content { background: var(--primary); color: white; }
         .bot-input-area {
             padding: 12px;
             background: white;
@@ -905,15 +515,7 @@ document.addEventListener("mousemove", function(e){
             display: flex;
             gap: 8px;
         }
-
-        .bot-input-area input {
-            flex: 1;
-            padding: 10px 14px;
-            border: 1px solid var(--gray-200);
-            border-radius: 24px;
-            outline: none;
-        }
-
+        .bot-input-area input { flex: 1; padding: 10px 14px; border: 1px solid var(--gray-200); border-radius: 24px; outline: none; }
         .bot-send-btn {
             background: var(--primary);
             border: none;
@@ -924,21 +526,10 @@ document.addEventListener("mousemove", function(e){
             cursor: pointer;
         }
 
-        .page {
-            display: none;
-        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .empty-state { text-align: center; padding: 48px; color: var(--gray-600); }
 
-        .page.active {
-            display: block;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 48px;
-            color: var(--gray-600);
-        }
-
-        /* ========== QR CODE SECTION ========== */
         .qrcode-section {
             background: var(--white);
             border-radius: var(--border-radius);
@@ -948,14 +539,7 @@ document.addEventListener("mousemove", function(e){
             box-shadow: var(--shadow-md);
             border: 1px solid var(--gray-200);
         }
-
-        .qrcode-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
+        .qrcode-container { display: flex; flex-direction: column; align-items: center; gap: 20px; }
         .qrcode-box {
             background: white;
             padding: 20px;
@@ -963,19 +547,8 @@ document.addEventListener("mousemove", function(e){
             display: inline-block;
             box-shadow: var(--shadow-md);
         }
-
-        #qrcode {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #qrcode img {
-            width: 200px;
-            height: 200px;
-            border-radius: 12px;
-        }
-
+        #qrcode { display: flex; justify-content: center; align-items: center; }
+        #qrcode img { width: 200px; height: 200px; border-radius: 12px; }
         .qrcode-url {
             background: var(--gray-100);
             padding: 12px;
@@ -985,7 +558,6 @@ document.addEventListener("mousemove", function(e){
             word-break: break-all;
             margin: 15px 0;
         }
-
         .btn-copy-url {
             background: var(--primary);
             color: white;
@@ -996,19 +568,8 @@ document.addEventListener("mousemove", function(e){
             font-size: 0.9rem;
             margin-top: 10px;
         }
-
-        .btn-copy-url:hover {
-            background: var(--primary-dark);
-        }
-
-        .share-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
+        .btn-copy-url:hover { background: var(--primary-dark); }
+        .share-buttons { display: flex; gap: 12px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
         .share-btn {
             padding: 10px 20px;
             border: none;
@@ -1017,12 +578,10 @@ document.addEventListener("mousemove", function(e){
             font-size: 0.9rem;
             font-weight: 500;
         }
-
         .share-whatsapp { background: #25D366; color: white; }
         .share-telegram { background: #0088cc; color: white; }
         .share-email { background: #ea4335; color: white; }
 
-        /* Version Switch */
         .version-switch {
             background: var(--gray-100);
             padding: 6px 12px;
@@ -1032,7 +591,6 @@ document.addEventListener("mousemove", function(e){
             gap: 8px;
             font-size: 0.75rem;
         }
-        
         .version-switch button {
             background: white;
             border: 1px solid var(--gray-300);
@@ -1042,13 +600,7 @@ document.addEventListener("mousemove", function(e){
             font-size: 0.7rem;
             transition: all 0.2s;
         }
-        
-        .version-switch button.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
+        .version-switch button.active { background: var(--primary); color: white; border-color: var(--primary); }
         .current-version-badge {
             background: var(--success);
             color: white;
@@ -1058,28 +610,8 @@ document.addEventListener("mousemove", function(e){
             font-weight: 500;
         }
 
-        /* Menu Hamburguer */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: var(--primary);
-            padding: 8px;
-        }
-
-        .mobile-menu-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
-
+        .menu-toggle { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--primary); padding: 8px; }
+        .mobile-menu-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
         .mobile-menu {
             position: fixed;
             top: 0;
@@ -1093,18 +625,8 @@ document.addEventListener("mousemove", function(e){
             padding: 20px;
             overflow-y: auto;
         }
-
         .mobile-menu.open { right: 0; }
-
-        .mobile-menu-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
+        .mobile-menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid var(--gray-200); }
         .mobile-nav-btn {
             display: block;
             width: 100%;
@@ -1118,15 +640,11 @@ document.addEventListener("mousemove", function(e){
             cursor: pointer;
         }
 
-        /* Forced modes */
-        body.force-desktop .menu-toggle,
-        body.force-desktop .mobile-menu,
-        body.force-desktop .mobile-menu-overlay { display: none !important; }
+        body.force-desktop .menu-toggle, body.force-desktop .mobile-menu, body.force-desktop .mobile-menu-overlay { display: none !important; }
         body.force-desktop .nav-menu { display: flex !important; }
         body.force-mobile .nav-menu { display: none !important; }
         body.force-mobile .menu-toggle { display: block !important; }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .nav-menu { display: none; }
             .menu-toggle { display: block; }
@@ -1143,13 +661,11 @@ document.addEventListener("mousemove", function(e){
             .top-bar { flex-direction: column; text-align: center; }
             .contact-info { flex-direction: column; gap: 8px; }
         }
-
         @media (max-width: 480px) {
             .categorias-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: 1fr; }
         }
 
-        /* Reading Guide */
         .reading-guide {
             position: fixed;
             top: 50%;
@@ -1163,91 +679,58 @@ document.addEventListener("mousemove", function(e){
         }
         .reading-guide.active { display: block; }
 
-        body.high-contrast {
-    background: #000 !important;
-    color: #FFF !important;
-}
-
-body.high-contrast .main-header,
-body.high-contrast .hero,
-body.high-contrast .timeline-container,
-body.high-contrast .noticia-card,
-body.high-contrast .categoria-card,
-body.high-contrast .modal-content,
-body.high-contrast footer,
-body.high-contrast .voice-bar,
-body.high-contrast .top-bar,
-body.high-contrast .stat-card-box,
-body.high-contrast .qrcode-section {
-    background: #000 !important;
-    color: #FFF !important;
-    border: 2px solid #FFD700 !important;
-}
-
-body.high-contrast button,
-body.high-contrast a {
-    color: #FFD700 !important;
-}
-
-body.high-contrast input,
-body.high-contrast textarea,
-body.high-contrast select {
-    background: #111 !important;
-    color: #FFF !important;
-    border: 2px solid #FFD700 !important;
-}
-
-body.high-contrast .logo-icon,
-body.high-contrast .nav-btn-primary,
-body.high-contrast .voice-btn {
-    background: #FFD700 !important;
-    color: #000 !important;
-}
+        body.high-contrast { --primary: #000080; --primary-dark: #000040; --gray-800: #000000; --gray-600: #333333; }
+        body.high-contrast .hero { background: #000; }
         body.large-text { font-size: 18px; }
         body.no-animations * { animation: none !important; transition: none !important; }
         body.increased-spacing { line-height: 1.8; letter-spacing: 0.5px; }
-        body.dyslexia-friendly { font-family: 'OpenDyslexic', 'Comic Sans MS', 'Chalkboard SE', sans-serif; 
-   button:focus,
-a:focus,
-input:focus,
-textarea:focus,
-select:focus {
-    outline: 3px solid #FFD700;
-    outline-offset: 3px;
-}}
+        body.dyslexia-friendly { font-family: 'OpenDyslexic', 'Comic Sans MS', 'Chalkboard SE', sans-serif; }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            z-index: 9999;
+            max-width: 90%;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+        }
+        .toast.show { display: flex; }
+        .toast.error { background: #c62828; }
+        .toast.success { background: #2e7d32; }
+        .toast.warning { background: #ed6c02; }
+        .toast .toast-close { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; margin-left: 12px; }
+
+        .badge-relato { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; margin-left: 8px; }
+        .badge-anonimo { background: #7b1fa2; color: white; }
+        .badge-publico { background: #00695c; color: white; }
     </style>
 </head>
 <body>
-    <!-- Accessibility Bar -->
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastMessage">Mensagem</span>
+        <button class="toast-close" onclick="fecharToast()">✕</button>
+    </div>
+
     <div class="accessibility-bar">
         <button onclick="toggleHighContrast()">🌓 Alto Contraste</button>
-       <button onclick="increaseFont()" aria-label="Aumentar tamanho do texto" title="Aumentar texto">
-    A+
-</button>
-
-<button onclick="decreaseFont()" aria-label="Diminuir tamanho do texto" title="Diminuir texto">
-    A-
-</button>
-
-<button onclick="resetFont()" aria-label="Restaurar tamanho do texto" title="Tamanho padrão">
-    A
-</button>
-<button onclick="toggleSpacing()"
-        aria-label="Aumentar espaçamento do texto"
-        title="Espaçamento">
-    📏 Espaçamento
-</button>
+        <button onclick="toggleLargeText()">🔤 Texto Ampliado</button>
+        <button onclick="toggleSpacing()">📏 Espaçamento</button>
         <button onclick="toggleDyslexiaFont()">📖 Fonte Dislexia</button>
-<button onclick="toggleReadingGuide()"
-        aria-label="Ativar guia de leitura"
-        title="Guia de Leitura">
-    📖 Guia de Leitura
-</button>
+        <button onclick="toggleReadingGuide()">📏 Guia de Leitura</button>
         <button onclick="toggleAnimations()">⏸️ Parar Animações</button>
         <button onclick="resetAccessibility()">🔄 Resetar</button>
     </div>
 
-    <!-- Voice Bar -->
     <div class="voice-bar">
         <button class="voice-btn" id="voiceStartBtn" onclick="startVoiceRecognition()">🎤</button>
         <span class="voice-status" id="voiceStatus">🎤 Clique para falar com o assistente</span>
@@ -1257,7 +740,6 @@ select:focus {
 
     <div class="reading-guide" id="readingGuide"></div>
 
-    <!-- Top Bar -->
     <div class="top-bar">
         <div class="contact-info">
             <span>📞 +55 68 9912-3456</span>
@@ -1266,7 +748,6 @@ select:focus {
         <div>📍 Sena Madureira - AC</div>
     </div>
 
-    <!-- Header -->
     <header class="main-header">
         <div class="header-container">
             <div class="logo" onclick="mostrarPagina('inicial')">
@@ -1291,12 +772,11 @@ select:focus {
                     <span id="user-name"></span>
                     <button class="nav-btn" onclick="logout()" style="padding: 4px 12px;">Sair</button>
                 </div>
-                <button class="nav-btn nav-btn-primary" onclick="mostrarModalRelatoAnonimo()">Relato Anônimo</button>
+                <button class="nav-btn nav-btn-success" onclick="mostrarModalRelato()">📝 Novo Relato</button>
+                <button class="nav-btn nav-btn-primary" onclick="mostrarModalRelatoAnonimo()">🕵️ Anônimo</button>
             </nav>
             <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
         </div>
-        
-        <!-- Seletor de Versão -->
         <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 12px;">
             <div class="version-switch">
                 <span>📱💻 Versão:</span>
@@ -1308,7 +788,6 @@ select:focus {
         </div>
     </header>
 
-    <!-- Mobile Menu -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="toggleMobileMenu()"></div>
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-header">
@@ -1333,10 +812,10 @@ select:focus {
             <button class="mobile-nav-btn" onclick="logout(); toggleMobileMenu()">🚪 Sair</button>
         </div>
         <hr style="margin: 15px 0;">
+        <button class="mobile-nav-btn" onclick="mostrarModalRelato(); toggleMobileMenu()">📝 Novo Relato</button>
         <button class="mobile-nav-btn" onclick="mostrarModalRelatoAnonimo(); toggleMobileMenu()">🕵️ Relato Anônimo</button>
     </div>
 
-    <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
             <div class="hero-text">
@@ -1356,9 +835,7 @@ select:focus {
         </div>
     </section>
 
-    <!-- Main Content -->
     <main class="container">
-        <!-- Inicial Page -->
         <div id="inicial-page" class="page active">
             <div class="section-tabs">
                 <button class="tab-btn active" onclick="mudarAba('noticias')">📰 Últimas Notícias</button>
@@ -1398,7 +875,6 @@ select:focus {
                 </div>
             </section>
 
-            <!-- QR CODE SECTION -->
             <section class="qrcode-section">
                 <div class="qrcode-container">
                     <h2 style="color: var(--primary); margin-bottom: 10px;">📱 Acesse pelo Celular</h2>
@@ -1424,15 +900,17 @@ select:focus {
             </section>
         </div>
 
-        <!-- Noticias Page -->
         <div id="noticias-page" class="page">
             <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
             <div class="noticias-grid" id="noticias-page-lista"></div>
         </div>
 
-        <!-- Relatos Page -->
         <div id="relatos-page" class="page">
-            <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
+            <div style="margin-bottom: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+                <button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button>
+                <button class="nav-btn nav-btn-success" onclick="mostrarModalRelato()">📝 Novo Relato</button>
+                <button class="nav-btn nav-btn-primary" onclick="mostrarModalRelatoAnonimo()">🕵️ Anônimo</button>
+            </div>
             <div class="stats-grid">
                 <div class="stat-card-box"><div class="stat-number-large" id="total-relatos-page">0</div><div>Total de Relatos</div></div>
                 <div class="stat-card-box"><div class="stat-number-large" id="pendentes-page">0</div><div>Pendentes</div></div>
@@ -1447,24 +925,23 @@ select:focus {
                         <button class="filter-btn" onclick="filtrarRelatos('pendente')">Pendentes</button>
                         <button class="filter-btn" onclick="filtrarRelatos('andamento')">Em Andamento</button>
                         <button class="filter-btn" onclick="filtrarRelatos('resolvido')">Resolvidos</button>
+                        <button class="filter-btn" onclick="filtrarRelatos('rejeitado')">Rejeitados</button>
                     </div>
                 </div>
                 <div id="relatos-lista-completa"></div>
             </div>
         </div>
 
-        <!-- Meus Relatos Page -->
         <div id="meus-relatos-page" class="page">
             <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
             <div class="timeline-container"><h3>📋 Meus Relatos</h3><div id="meus-relatos-lista"></div></div>
         </div>
 
-        <!-- Transparencia Page -->
         <div id="transparencia-page" class="page">
             <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
             <div class="timeline-container">
                 <h3>📊 Transparência Pública</h3>
-                <p style="margin: 16px 0;">Dados atualizados mensalmente • Exercício 2026</p>
+                <p style="margin: 16px 0;">Dados atualizados mensalmente • Exercício 2024</p>
                 <div style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead><tr style="background: var(--gray-100);"><th style="padding: 12px;">Secretaria</th><th>Orçamento</th><th>Executado</th><th>%</th></tr></thead>
@@ -1477,75 +954,8 @@ select:focus {
                 </div>
             </div>
         </div>
-
-        <!-- FAQ PAGE -->
-        <div id="faq-page" class="page">
-            <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
-            <div class="timeline-container legal-content">
-                <h2>🙋 Perguntas Frequentes (FAQ)</h2>
-                <p>Encontre respostas rápidas para as principais dúvidas sobre o portal.</p>
-                
-                <div class="faq-item">
-                    <div class="faq-question">1. O que é o Participa Sena?</div>
-                    <div>É um canal de ouvidoria e relatos visuais urbanos onde o cidadão indica melhorias necessárias em Sena Madureira - AC.</div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">2. O relato anônimo é realmente seguro?</div>
-                    <div>Sim. Conforme a LGPD, os relatos anônimos não coletam metadados pessoais, endereços IP ou identificadores que possam comprometer seu anonimato.</div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">3. Por que preciso informar meu CPF no cadastro?</div>
-                    <div>O CPF atua como validador de unicidade para coibir relatos falsos (fakes) repetitivos, protegendo a integridade da plataforma.</div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">4. Qual o prazo para resolução do meu relato?</div>
-                    <div>Os relatos são triados em até 48 horas e encaminhados às secretarias competentes de acordo com o orçamento executado exposto em Transparência.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PRIVACIDADE PAGE -->
-        <div id="privacidade-page" class="page">
-            <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
-            <div class="timeline-container legal-content">
-                <h2>🔒 Política de Privacidade (Conforme LGPD - Lei nº 13.709)</h2>
-                <p><strong>Última atualização:</strong> Junho de 2026.</p>
-                <p>Esta política descreve como tratamos e protegemos seus dados pessoais de acordo com os princípios da boa-fé, finalidade e adequação.</p>
-                
-                <h3>1. Dados Coletados</h3>
-                <p>Coletamos apenas o estritamente necessário para sua identificação técnica segura: Nome Completo, CPF, E-mail, Telefone e Endereço opcional.</p>
-                
-                <h3>2. Princípio da Necessidade e Minimização</h3>
-                <p>Seguimos rigidamente o <em>Princípio da Necessidade</em>. Não solicitamos nem armazenamos dados sensíveis (origem racial, convicção religiosa ou opiniões políticas). A coleta limita-se ao suporte regulatório de validação cidadã.</p>
-                
-                <h3>3. Direitos do Titular dos Dados</h3>
-                <p>O usuário possui o direito de confirmar a existência do tratamento de dados, acessar seus dados e requerer a correção de informações incompletas ou desatualizadas diretamente pelo e-mail: <strong>relatos@participasena.gov</strong>.</p>
-                
-                <h3>4. Segurança da Informação</h3>
-                <p>Adotamos medidas técnicas administrativas robustas para mitigar riscos de vazamentos, invasões ou acessos não autorizados à nossa base local criptografada.</p>
-            </div>
-        </div>
-
-        <!-- TERMOS DE USO PAGE -->
-        <div id="termos-page" class="page">
-            <div style="margin-bottom: 24px;"><button class="filter-btn" onclick="mostrarPagina('inicial')">← Voltar</button></div>
-            <div class="timeline-container legal-content">
-                <h2>⚖️ Termos de Uso do Sistema</h2>
-                <p>Ao navegar ou cadastrar-se no Participa Sena, você concorda explicitamente com as regras de convivência social e técnica vigentes:</p>
-                
-                <h3>1. Responsabilidade do Conteúdo</h3>
-                <p>O cidadão é inteiramente responsável pela veracidade das descrições enviadas. Declarações falsas, caluniosas ou difamatórias direcionadas a servidores ou cidadãos resultarão na suspensão imediata da conta.</p>
-                
-                <h3>2. Uso de Imagens e Dados de Localização</h3>
-                <p>O recurso de geolocalização por mapa serve unicamente para fixar o marcador do incidente urbano e não rastreia as rotas de navegação do usuário de forma contínua.</p>
-                
-                <h3>3. Respeito Regulatório</h3>
-                <p>O portal atua em conformidade com as diretrizes e leis de transparência pública municipais e federais do Brasil.</p>
-            </div>
-        </div>
     </main>
 
-    <!-- Map Section -->
     <section class="map-section">
         <div class="map-container">
             <div class="map-title"><h2>🗺️ Acompanhe os Relatos em Tempo Real</h2><p>Visualize no mapa todos os relatos registrados pela população</p></div>
@@ -1571,7 +981,7 @@ select:focus {
     <div class="modal" id="modal-cadastro">
         <div class="modal-content">
             <h3 style="margin-bottom: 24px;">📝 Cadastro de Cidadão</h3>
-            <p style="margin-bottom: 16px; font-size: 0.8rem; color: var(--gray-600);">⚠️ Seus dados pessoais serão tratados com confidencialidade para fins estritos de legitimação cidadã e prevenção de fraudes, em total conformidade com a LGPD.</p>
+            <p style="margin-bottom: 16px; font-size: 0.8rem; color: var(--gray-600);">⚠️ CPF único para evitar relatos falsos. Dados protegidos pela LGPD.</p>
             <form id="cadastroForm">
                 <div class="form-group"><label>Nome Completo *</label><input type="text" id="cadastro-nome" required></div>
                 <div class="form-group"><label>CPF *</label><input type="text" id="cadastro-cpf" placeholder="000.000.000-00" maxlength="14" required></div>
@@ -1580,49 +990,68 @@ select:focus {
                 <div class="form-group"><label>Endereço</label><input type="text" id="cadastro-endereco"></div>
                 <div class="form-group"><label>Senha *</label><input type="password" id="cadastro-senha" placeholder="Mínimo 6 caracteres" required></div>
                 <div class="form-group"><label>Confirmar Senha *</label><input type="password" id="cadastro-confirmar-senha" required></div>
-                <div class="form-group">
-                    <label style="display: flex; align-items: flex-start; gap: 8px;">
-                        <input type="checkbox" required style="width: auto; margin-top: 4px;">
-                        <span>Li e aceito as condições de tratamento de dados da <a href="#" onclick="fecharModal('modal-cadastro'); mostrarPagina('privacidade')">Política de Privacidade</a> e dos <a href="#" onclick="fecharModal('modal-cadastro'); mostrarPagina('termos')">Termos de Uso</a>.</span>
-                    </label>
-                </div>
                 <button type="submit" class="nav-btn nav-btn-primary" style="width: 100%;">Cadastrar</button>
                 <button type="button" onclick="fecharModal('modal-cadastro')" style="margin-top: 12px; width: 100%;" class="nav-btn">Cancelar</button>
             </form>
         </div>
     </div>
 
+    <!-- Modal de Relato (NÃO ANÔNIMO) -->
     <div class="modal" id="modal-relato">
         <div class="modal-content">
-            <h3 style="margin-bottom: 24px;">⚠️ Registrar Relato</h3>
+            <h3 style="margin-bottom: 24px;">📝 Registrar Relato</h3>
+            <p style="margin-bottom: 16px; font-size: 0.85rem; color: var(--gray-600);">
+                🔒 Seu relato será identificado. <strong>É necessário estar logado</strong> para relatos não anônimos.
+            </p>
             <form id="relatoForm">
-                <div class="form-group"><label>Categoria *</label><select id="relato-categoria" required><option value="">Selecione</option><option value="Buracos na rua">🕳️ Buracos na rua</option><option value="Iluminação pública">💡 Iluminação pública</option><option value="Lixo acumulado">🗑️ Lixo acumulado</option><option value="Esgoto a céu aberto">💩 Esgoto a céu aberto</option><option value="Segurança">🚔 Segurança</option><option value="Ruas não asfaltadas">🛣️ Ruas não asfaltadas</option></select></div>
+                <div class="form-group">
+                    <label>Categoria *</label>
+                    <select id="relato-categoria" required>
+                        <option value="">Selecione</option>
+                        <option value="Buracos na rua">🕳️ Buracos na rua</option>
+                        <option value="Iluminação pública">💡 Iluminação pública</option>
+                        <option value="Lixo acumulado">🗑️ Lixo acumulado</option>
+                        <option value="Esgoto a céu aberto">💩 Esgoto a céu aberto</option>
+                        <option value="Segurança">🚔 Segurança</option>
+                        <option value="Ruas não asfaltadas">🛣️ Ruas não asfaltadas</option>
+                    </select>
+                </div>
                 <div class="form-group"><label>Endereço *</label><input type="text" id="relato-endereco" required></div>
                 <div class="form-group"><label>Bairro *</label><input type="text" id="relato-bairro" required></div>
-                <div class="form-group"><label>Descrição *</label><textarea id="relato-descricao" rows="4" required></textarea></div>
-                <div class="form-group"><label><input type="checkbox" id="relato-anonimo"> Relato Anônimo</label></div>
-                <button type="submit" class="nav-btn nav-btn-primary" style="width: 100%;">Enviar Relato</button>
+                <div class="form-group"><label>Descrição *</label><textarea id="relato-descricao" rows="4" required placeholder="Descreva o problema com detalhes..."></textarea></div>
+                <button type="submit" class="nav-btn nav-btn-success" style="width: 100%;">📤 Enviar Relato</button>
                 <button type="button" onclick="fecharModal('modal-relato')" style="margin-top: 12px; width: 100%;" class="nav-btn">Cancelar</button>
             </form>
         </div>
     </div>
 
+    <!-- Modal de Relato ANÔNIMO -->
     <div class="modal" id="modal-relato-anonimo">
         <div class="modal-content">
             <h3 style="margin-bottom: 24px;">🕵️ Relato Anônimo</h3>
-            <p style="margin-bottom: 16px; font-size: 0.8rem;">🔒 100% seguro - Nenhum dado identificável de navegação ou IP é armazenado para este módulo em conformidade com o princípio de minimização da LGPD.</p>
+            <p style="margin-bottom: 16px; font-size: 0.85rem;">🔒 100% anônimo - nenhum dado pessoal será solicitado</p>
             <form id="relatoAnonimoForm">
-                <div class="form-group"><label>Categoria *</label><select id="relato-anonimo-categoria" required><option value="">Selecione</option><option value="Buracos na rua">🕳️ Buracos na rua</option><option value="Iluminação pública">💡 Iluminação pública</option><option value="Lixo acumulado">🗑️ Lixo acumulado</option><option value="Esgoto a céu aberto">💩 Esgoto a céu aberto</option><option value="Segurança">🚔 Segurança</option><option value="Ruas não asfaltadas">🛣️ Ruas não asfaltadas</option></select></div>
+                <div class="form-group">
+                    <label>Categoria *</label>
+                    <select id="relato-anonimo-categoria" required>
+                        <option value="">Selecione</option>
+                        <option value="Buracos na rua">🕳️ Buracos na rua</option>
+                        <option value="Iluminação pública">💡 Iluminação pública</option>
+                        <option value="Lixo acumulado">🗑️ Lixo acumulado</option>
+                        <option value="Esgoto a céu aberto">💩 Esgoto a céu aberto</option>
+                        <option value="Segurança">🚔 Segurança</option>
+                        <option value="Ruas não asfaltadas">🛣️ Ruas não asfaltadas</option>
+                    </select>
+                </div>
                 <div class="form-group"><label>Endereço *</label><input type="text" id="relato-anonimo-endereco" required></div>
                 <div class="form-group"><label>Bairro *</label><input type="text" id="relato-anonimo-bairro" required></div>
-                <div class="form-group"><label>Descrição *</label><textarea id="relato-anonimo-descricao" rows="4" required></textarea></div>
-                <button type="submit" class="nav-btn nav-btn-primary" style="width: 100%;">Enviar Relato</button>
+                <div class="form-group"><label>Descrição *</label><textarea id="relato-anonimo-descricao" rows="4" required placeholder="Descreva o problema com detalhes..."></textarea></div>
+                <button type="submit" class="nav-btn nav-btn-primary" style="width: 100%;">🕵️ Enviar Anônimo</button>
                 <button type="button" onclick="fecharModal('modal-relato-anonimo')" style="margin-top: 12px; width: 100%;" class="nav-btn">Cancelar</button>
             </form>
         </div>
     </div>
 
-    <!-- Bot Chat -->
     <div class="bot-container">
         <div class="bot-chat minimized" id="botChat">
             <div class="bot-header" onclick="toggleBot()"><span>🤖</span><span><strong>Assistente IA</strong><br><small>Online 24h</small></span><button class="bot-close" onclick="event.stopPropagation(); toggleBot()" style="margin-left: auto; background: none; border: none; color: white; cursor: pointer;">✕</button></div>
@@ -1632,26 +1061,35 @@ select:focus {
         <div class="bot-avatar" onclick="toggleBot()">🤖</div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="footer-grid">
             <div class="footer-section"><h4>📢 Portal Cidadão</h4><p>Plataforma colaborativa para notícias e relatos urbanos.</p></div>
             <div class="footer-section"><h4>Links Rápidos</h4><ul><li><a href="#" onclick="event.preventDefault(); mostrarPagina('inicial')">Início</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('noticias')">Notícias</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('relatos')">Relatos</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('transparencia')">Transparência</a></li></ul></div>
-            <div class="footer-section"><h4>Links Legais e Suporte</h4><ul><li><a href="#" onclick="event.preventDefault(); mostrarPagina('faq')">🙋 Perguntas Frequentes (FAQ)</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('privacidade')">🔒 Política de Privacidade (LGPD)</a></li><li><a href="#" onclick="event.preventDefault(); mostrarPagina('termos')">⚖️ Termos de Uso</a></li></ul></div>
             <div class="footer-section"><h4>Contato</h4><ul><li>📞 +55 68 9912-3456</li><li>✉️ relatos@portalcidadao.gov</li><li>📍 Sena Madureira - AC</li></ul></div>
         </div>
-        <div class="footer-bottom"><p>&copy; 2026 Portal Cidadão / Participa Sena - Em conformidade com a LGPD. Todos os direitos reservados</p></div>
+        <div class="footer-bottom"><p>&copy; 2024 Portal Cidadão - Todos os direitos reservados</p></div>
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://vlibras.gov.br/app/vlibras.js"></script>
-    
     <script>
+        // ============================================
+        // SISTEMA COMPLETO COM BOT ANALISADOR
+        // ============================================
+        
         let usuarioLogado = null;
         let relatos = [];
         let usuarios = [];
         let map;
         let currentVersion = 'auto';
+
+        // Palavras proibidas
+        const PALAVRAS_PROIBIDAS = [
+            'merda', 'bosta', 'caralho', 'puta', 'porra', 'fuder', 'fodase', 'cu', 'vsf', 'vtnc', 
+            'viado', 'boquete', 'buceta', 'pica', 'rola', 'punheta', 'xoxota', 'arrombado', 'otario',
+            'idiota', 'burro', 'imbecil', 'retardado', 'mongol', 'trouxa', 'babaca', 'filho da puta',
+            'desgraçado', 'infeliz', 'lixo humano', 'escória', 'vagabundo', 'maldito', 'porcaria'
+        ];
 
         const categoriasRelato = [
             { nome: "Buracos na rua", icone: "🕳️", desc: "Problemas de pavimentação" },
@@ -1663,22 +1101,36 @@ select:focus {
         ];
 
         const noticiasSimuladas = [
-            { titulo: "Vice-governadora Mailza destaca investimentos em Sena Madureira", categoria: "Infraestrutura", data: "10/01/2026", resumo: "A vice-governadora do Acre cumpriu agenda institucional...", imagem: "https://agencia.ac.gov.br/wp-content/uploads/2026/01/a3c67961-35d0-40cc-b8c8-64de5f6a5e8e-scaled.jpeg" },
-            { titulo: "Saúde recebe mais de R$ 21 milhões em emendas", categoria: "Saúde", data: "09/01/2026", resumo: "Recursos de emendas parlamentares para a saúde municipal...", imagem: "https://ac24horas.com/wp-content/uploads/2025/07/Imagem-do-WhatsApp-de-2025-07-23-as-08.43.18_1b9be883-scaled.webp" },
-            { titulo: "Prefeito discute saúde itinerante com senador", categoria: "Saúde", data: "09/01/2026", resumo: "Recursos para UBS fluvial atendendo comunidades ribeirinhas...", imagem: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTorXtcQIwSwRl3q-VjQGYEnCA6WLOiILjHHA&s" }
+            { titulo: "Vice-governadora Mailza destaca investimentos em Sena Madureira", categoria: "Infraestrutura", data: "10/01/2024", resumo: "A vice-governadora do Acre cumpriu agenda institucional...", imagem: "https://agencia.ac.gov.br/wp-content/uploads/2026/01/a3c67961-35d0-40cc-b8c8-64de5f6a5e8e-scaled.jpeg" },
+            { titulo: "Saúde recebe mais de R$ 21 milhões em emendas", categoria: "Saúde", data: "09/01/2024", resumo: "Recursos de emendas parlamentares para a saúde municipal...", imagem: "https://ac24horas.com/wp-content/uploads/2025/07/Imagem-do-WhatsApp-de-2025-07-23-as-08.43.18_1b9be883-scaled.webp" },
+            { titulo: "Prefeito discute saúde itinerante com senador", categoria: "Saúde", data: "09/01/2024", resumo: "Recursos para UBS fluvial atendendo comunidades ribeirinhas...", imagem: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTorXtcQIwSwRl3q-VjQGYEnCA6WLOiILjHHA&s" }
         ];
 
-        // ========== FUNÇÃO DO QR CODE CORRIGIDA ==========
+        // ========== TOAST ==========
+        function mostrarToast(mensagem, tipo = 'info') {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toastMessage');
+            toast.className = 'toast show ' + tipo;
+            msg.textContent = mensagem;
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => { toast.classList.remove('show'); }, 6000);
+        }
+
+        function fecharToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('show');
+            clearTimeout(toast._timeout);
+        }
+
+        // ========== QR CODE ==========
         function gerarQRCode() {
             try {
                 const url = window.location.href;
                 const qrcodeDiv = document.getElementById('qrcode');
                 const urlSpan = document.getElementById('currentUrl');
-                
                 if (!qrcodeDiv) return;
                 qrcodeDiv.innerHTML = '';
                 if (urlSpan) urlSpan.textContent = url;
-                
                 if (typeof QRCode !== 'undefined') {
                     new QRCode(qrcodeDiv, {
                         text: url,
@@ -1689,20 +1141,19 @@ select:focus {
                         correctLevel: QRCode.CorrectLevel.H
                     });
                 } else {
-                    qrcodeDiv.innerHTML = '<p style="color: red;">Erro ao carregar QR Code. Recarregue.</p>';
+                    qrcodeDiv.innerHTML = '<p style="color: red;">Erro ao carregar QR Code. Recarregue a página.</p>';
                 }
             } catch (error) {
-                console.error(error);
+                console.error('Erro ao gerar QR Code:', error);
             }
         }
 
         function copiarUrl() {
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {
-                alert('✅ Link copiado para a área de transferência!');
-                addBotMessage('📋 Link copiado! Compartilhe com outras pessoas.', 'bot');
+                mostrarToast('✅ Link copiado para a área de transferência!', 'success');
             }).catch(() => {
-                alert('❌ Não foi possível copiar: ' + url);
+                alert('❌ Não foi possível copiar. Copie manualmente: ' + url);
             });
         }
 
@@ -1710,27 +1161,21 @@ select:focus {
             const url = window.location.href;
             window.open(`https://wa.me/?text=${encodeURIComponent("📢 Participa Sena - Sistema de Relatos Urbanos\n\nAcesse: " + url)}`, '_blank');
         }
-
         function compartilharTelegram() {
             const url = window.location.href;
-            window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent("📢 Participa Sena")}`, '_blank');
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent("📢 Participa Sena - Sistema de Relatos Urbanos")}`, '_blank');
         }
-
         function compartilharEmail() {
             const url = window.location.href;
-            window.location.href = `mailto:?subject=${encodeURIComponent("Participa Sena")}&body=${encodeURIComponent("Acesse: " + url)}`;
+            window.location.href = `mailto:?subject=${encodeURIComponent("Participa Sena - Portal de Relatos Urbanos")}&body=${encodeURIComponent("Olá! Conheça o Participa Sena, o portal de relatos urbanos da nossa cidade.\n\nAcesse: " + url)}`;
         }
 
-        // ========== VERSÃO DESKTOP/MOBILE ==========
-        function detectarDispositivo() {
-            return window.innerWidth <= 768 ? 'mobile' : 'desktop';
-        }
-        
+        // ========== VERSÃO ==========
+        function detectarDispositivo() { return window.innerWidth <= 768 ? 'mobile' : 'desktop'; }
         function aplicarVersao() {
             const deviceType = detectarDispositivo();
             let versaoAtiva = currentVersion;
             if (currentVersion === 'auto') versaoAtiva = deviceType;
-            
             document.body.classList.remove('force-desktop', 'force-mobile');
             if (versaoAtiva === 'desktop') {
                 document.body.classList.add('force-desktop');
@@ -1741,26 +1186,644 @@ select:focus {
             } else {
                 document.getElementById('versionBadge').innerHTML = deviceType === 'mobile' ? '📱 Modo Mobile (automático)' : '🖥️ Modo Desktop (automático)';
             }
-            
-            document.getElementById('btnAutoVersion').classList.remove('active');
-            document.getElementById('btnDesktopVersion').classList.remove('active');
-            document.getElementById('btnMobileVersion').classList.remove('active');
-            if (currentVersion === 'auto') document.getElementById('btnAutoVersion').classList.add('active');
-            else if (currentVersion === 'desktop') document.getElementById('btnDesktopVersion').classList.add('active');
-            else if (currentVersion === 'mobile') document.getElementById('btnMobileVersion').classList.add('active');
-            
+            document.getElementById('btnAutoVersion').classList.toggle('active', currentVersion === 'auto');
+            document.getElementById('btnDesktopVersion').classList.toggle('active', currentVersion === 'desktop');
+            document.getElementById('btnMobileVersion').classList.toggle('active', currentVersion === 'mobile');
             localStorage.setItem('user_version_preference', currentVersion);
         }
-        
         function setVersion(version) {
             currentVersion = version;
             aplicarVersao();
+            let msg = version === 'auto' ? '🤖 Modo automático ativado!' : version === 'desktop' ? '🖥️ Modo Desktop ativado!' : '📱 Modo Mobile ativado!';
+            addBotMessage(msg, 'bot');
         }
-        
+        function carregarPreferenciaVersao() {
+            const saved = localStorage.getItem('user_version_preference');
+            if (saved && ['auto','desktop','mobile'].includes(saved)) currentVersion = saved;
+            aplicarVersao();
+        }
         window.addEventListener('resize', function() { if (currentVersion === 'auto') aplicarVersao(); });
 
+        // ========== MENU MOBILE ==========
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
             const overlay = document.getElementById('mobileMenuOverlay');
             if(menu) menu.classList.toggle('open');
-            if(overlay) overlay.style.dis
+            if(overlay) overlay.style.display = menu && menu.classList.contains('open') ? 'block' : 'none';
+        }
+        function mostrarPaginaMobile(pagina) { mostrarPagina(pagina); toggleMobileMenu(); }
+
+        // ========== FUNÇÕES PRINCIPAIS ==========
+        function carregarDados() {
+            const savedRelatos = localStorage.getItem('relatos_portal');
+            const savedUsuarios = localStorage.getItem('usuarios_portal');
+            if (savedRelatos) relatos = JSON.parse(savedRelatos);
+            if (savedUsuarios) usuarios = JSON.parse(savedUsuarios);
+            if (usuarios.length === 0) {
+                usuarios.push({ id: 1, nome: "Administrador", email: "admin@portalcidadao.gov", cpf: "00000000000", telefone: "(68) 99999-9999", senha: "admin123", role: "admin", dataCadastro: new Date().toISOString() });
+                localStorage.setItem('usuarios_portal', JSON.stringify(usuarios));
+            }
+            const savedUser = localStorage.getItem('usuario_logado');
+            if (savedUser) {
+                usuarioLogado = JSON.parse(savedUser);
+                atualizarInterfaceUsuario();
+            }
+            atualizarEstatisticas();
+            renderizarRelatos();
+        }
+
+        function salvarRelatos() { localStorage.setItem('relatos_portal', JSON.stringify(relatos)); }
+        function salvarUsuarios() { localStorage.setItem('usuarios_portal', JSON.stringify(usuarios)); }
+
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/[^\d]/g, '');
+            if (cpf.length !== 11) return false;
+            if (/^(\d)\1{10}$/.test(cpf)) return false;
+            let soma = 0;
+            for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
+            let resto = 11 - (soma % 11);
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpf.charAt(9))) return false;
+            soma = 0;
+            for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
+            resto = 11 - (soma % 11);
+            if (resto === 10 || resto === 11) resto = 0;
+            return resto === parseInt(cpf.charAt(10));
+        }
+
+        // ========== FILTRO DE LINGUAGEM E ANÁLISE ==========
+        function contemPalavrao(texto) {
+            const lower = texto.toLowerCase();
+            for (let palavra of PALAVRAS_PROIBIDAS) {
+                if (lower.includes(palavra)) return true;
+            }
+            return false;
+        }
+
+        function filtrarPalavras(texto) {
+            let resultado = texto;
+            for (let palavra of PALAVRAS_PROIBIDAS) {
+                const regex = new RegExp(palavra, 'gi');
+                resultado = resultado.replace(regex, '****');
+            }
+            return resultado;
+        }
+
+        function analisarRelato(relato) {
+            // 1. Filtro de linguagem - REJEIÇÃO IMEDIATA
+            if (contemPalavrao(relato.descricao)) {
+                relato.status = 'rejeitado';
+                relato.motivo_rejeicao = 'Linguagem imprópria (palavrões/xingamentos) detectada.';
+                relato.descricao_filtrada = filtrarPalavras(relato.descricao);
+                mostrarToast('🚫 Relato rejeitado: contém palavras inapropriadas!', 'error');
+                addBotMessage(`🚫 Relato rejeitado: contém palavras inapropriadas. Por favor, evite linguagem ofensiva.`, 'bot');
+                return false;
+            }
+
+            // 2. Verificação de duplicidade
+            const similares = relatos.filter(r => 
+                r.categoria === relato.categoria && 
+                r.bairro === relato.bairro &&
+                r.id !== relato.id &&
+                r.status !== 'rejeitado'
+            );
+            
+            if (similares.length > 0) {
+                const palavrasDesc = relato.descricao.toLowerCase().split(/\s+/).filter(p => p.length > 3);
+                let similarCount = 0;
+                for (let r of similares) {
+                    const palavrasR = r.descricao.toLowerCase().split(/\s+/).filter(p => p.length > 3);
+                    const interseccao = palavrasDesc.filter(p => palavrasR.includes(p));
+                    if (interseccao.length >= 2) {
+                        similarCount++;
+                    }
+                }
+                if (similarCount >= 2) {
+                    relato.status = 'rejeitado';
+                    relato.motivo_rejeicao = 'Relato duplicado ou muito similar a outros já registrados na mesma região.';
+                    mostrarToast('🔍 Relato rejeitado: já existem relatos semelhantes!', 'warning');
+                    addBotMessage(`🔍 Relato rejeitado: já existem relatos semelhantes para "${relato.categoria}" no bairro ${relato.bairro}.`, 'bot');
+                    return false;
+                }
+            }
+
+            // APROVADO
+            relato.status = 'pendente';
+            relato.motivo_rejeicao = null;
+            relato.descricao_filtrada = relato.descricao;
+            mostrarToast('✅ Relato aprovado e publicado com sucesso!', 'success');
+            addBotMessage(`✅ Relato aprovado! Agora está na fila de análise da prefeitura.`, 'bot');
+            return true;
+        }
+
+        // ========== REGISTRAR RELATO ==========
+        function registrarRelato(dados, isAnonimo = false) {
+            // Verifica se está logado para relato não anônimo
+            if (!isAnonimo && !usuarioLogado) {
+                mostrarToast('⚠️ Faça login para fazer um relato identificado!', 'warning');
+                mostrarModalLogin();
+                return false;
+            }
+
+            const novoRelato = {
+                id: relatos.length + 1,
+                categoria: dados.categoria,
+                endereco: dados.endereco,
+                bairro: dados.bairro,
+                descricao: dados.descricao,
+                data: new Date().toISOString(),
+                anonimo: isAnonimo,
+                usuario_id: !isAnonimo && usuarioLogado ? usuarioLogado.id : null,
+                usuario_nome: !isAnonimo && usuarioLogado ? usuarioLogado.nome : 'Anônimo',
+                status: 'pendente',
+                motivo_rejeicao: null,
+                descricao_filtrada: dados.descricao
+            };
+
+            const aprovado = analisarRelato(novoRelato);
+            
+            relatos.push(novoRelato);
+            salvarRelatos();
+            atualizarEstatisticas();
+            renderizarRelatos();
+            
+            fecharModal('modal-relato');
+            fecharModal('modal-relato-anonimo');
+            
+            return aprovado;
+        }
+
+        // ========== FORMULÁRIOS ==========
+        document.getElementById('cadastroForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nome = document.getElementById('cadastro-nome').value;
+            const cpf = document.getElementById('cadastro-cpf').value.replace(/[^\d]/g, '');
+            const email = document.getElementById('cadastro-email').value;
+            const telefone = document.getElementById('cadastro-telefone').value;
+            const endereco = document.getElementById('cadastro-endereco').value;
+            const senha = document.getElementById('cadastro-senha').value;
+            const confirmar = document.getElementById('cadastro-confirmar-senha').value;
+            
+            if (!validarCPF(cpf)) { mostrarToast('CPF inválido!', 'error'); return; }
+            if (senha !== confirmar) { mostrarToast('As senhas não coincidem!', 'error'); return; }
+            if (senha.length < 6) { mostrarToast('A senha deve ter no mínimo 6 caracteres!', 'error'); return; }
+            if (usuarios.find(u => u.cpf === cpf)) { mostrarToast('CPF já cadastrado!', 'error'); return; }
+            if (usuarios.find(u => u.email === email)) { mostrarToast('E-mail já cadastrado!', 'error'); return; }
+            
+            usuarios.push({ id: usuarios.length + 1, nome, cpf, email, telefone, endereco, senha, role: 'cidadao', dataCadastro: new Date().toISOString() });
+            salvarUsuarios();
+            mostrarToast('✅ Cadastro realizado! Faça login.', 'success');
+            fecharModal('modal-cadastro');
+            mostrarModalLogin();
+        });
+
+        document.getElementById('loginForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const senha = document.getElementById('login-senha').value;
+            const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+            if (usuario) {
+                usuarioLogado = usuario;
+                localStorage.setItem('usuario_logado', JSON.stringify(usuario));
+                atualizarInterfaceUsuario();
+                fecharModal('modal-login');
+                mostrarToast(`👋 Olá ${usuario.nome}!`, 'success');
+                addBotMessage(`👋 Olá ${usuario.nome}!`, 'bot');
+                mostrarPagina('inicial');
+            } else {
+                mostrarToast('E-mail ou senha incorretos!', 'error');
+            }
+        });
+
+        function atualizarInterfaceUsuario() {
+            const authDiv = document.getElementById('auth-buttons');
+            const userDiv = document.getElementById('user-info');
+            const userNameSpan = document.getElementById('user-name');
+            const mobileAuthDiv = document.getElementById('mobile-auth-buttons');
+            const mobileUserDiv = document.getElementById('mobile-user-info');
+            const mobileUserNameSpan = document.getElementById('mobile-user-name');
+            
+            if (usuarioLogado) {
+                if (authDiv) authDiv.style.display = 'none';
+                if (userDiv) userDiv.style.display = 'flex';
+                if (userNameSpan) userNameSpan.textContent = usuarioLogado.nome.split(' ')[0];
+                if (mobileAuthDiv) mobileAuthDiv.style.display = 'none';
+                if (mobileUserDiv) mobileUserDiv.style.display = 'block';
+                if (mobileUserNameSpan) mobileUserNameSpan.textContent = usuarioLogado.nome.split(' ')[0];
+            } else {
+                if (authDiv) authDiv.style.display = 'flex';
+                if (userDiv) userDiv.style.display = 'none';
+                if (mobileAuthDiv) mobileAuthDiv.style.display = 'block';
+                if (mobileUserDiv) mobileUserDiv.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            usuarioLogado = null;
+            localStorage.removeItem('usuario_logado');
+            atualizarInterfaceUsuario();
+            mostrarPagina('inicial');
+            mostrarToast('👋 Até logo!', 'info');
+            addBotMessage('👋 Até logo!', 'bot');
+        }
+
+        // ========== SUBMISSÃO DOS FORMULÁRIOS DE RELATO ==========
+        document.getElementById('relatoForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Verifica se está logado
+            if (!usuarioLogado) {
+                mostrarToast('⚠️ Você precisa estar logado para fazer um relato identificado!', 'warning');
+                mostrarModalLogin();
+                return;
+            }
+            
+            const dados = {
+                categoria: document.getElementById('relato-categoria').value,
+                endereco: document.getElementById('relato-endereco').value,
+                bairro: document.getElementById('relato-bairro').value,
+                descricao: document.getElementById('relato-descricao').value
+            };
+            
+            const aprovado = registrarRelato(dados, false);
+            
+            if (aprovado) {
+                this.reset();
+            }
+        });
+
+        document.getElementById('relatoAnonimoForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const dados = {
+                categoria: document.getElementById('relato-anonimo-categoria').value,
+                endereco: document.getElementById('relato-anonimo-endereco').value,
+                bairro: document.getElementById('relato-anonimo-bairro').value,
+                descricao: document.getElementById('relato-anonimo-descricao').value
+            };
+            
+            const aprovado = registrarRelato(dados, true);
+            
+            if (aprovado) {
+                this.reset();
+            }
+        });
+
+        // ========== RENDERIZAÇÃO ==========
+        function renderizarRelatos() {
+            const listaCompleta = document.getElementById('relatos-lista-completa');
+            const meusLista = document.getElementById('meus-relatos-lista');
+            const recentesLista = document.getElementById('inicial-relatos-lista');
+            const anonimosLista = document.getElementById('inicial-anonimos-lista');
+            const rankingLista = document.getElementById('inicial-ranking-lista');
+
+            const relatosOrdenados = [...relatos].reverse();
+
+            if (listaCompleta) {
+                if (relatos.length === 0) listaCompleta.innerHTML = '<div class="empty-state">Nenhum relato registrado.</div>';
+                else listaCompleta.innerHTML = relatosOrdenados.map(r => {
+                    const tipoRelato = r.anonimo ? '🕵️ Anônimo' : '👤 Público';
+                    return `
+                    <div class="relato-item ${r.status} ${r.anonimo ? 'anonimo' : ''}">
+                        <div class="relato-conteudo">
+                            <h4>${r.categoria} <span class="badge-relato ${r.anonimo ? 'badge-anonimo' : 'badge-publico'}">${tipoRelato}</span></h4>
+                            <div class="relato-meta">📍 ${r.endereco} • 🏘️ ${r.bairro} • 📅 ${new Date(r.data).toLocaleDateString('pt-BR')}</div>
+                            <p>${r.descricao_filtrada || r.descricao}</p>
+                            ${r.motivo_rejeicao ? `<p style="color: var(--secondary); font-size: 0.8rem; margin-top: 8px;">⚠️ ${r.motivo_rejeicao}</p>` : ''}
+                        </div>
+                        <span class="status-badge" style="background: ${r.status === 'resolvido' ? '#2e7d32' : r.status === 'andamento' ? '#ffb347' : r.status === 'rejeitado' ? '#e63946' : '#ed6c02'}; color: white;">
+                            ${r.status === 'pendente' ? 'Pendente' : r.status === 'andamento' ? 'Em Andamento' : r.status === 'rejeitado' ? 'Rejeitado' : 'Resolvido'}
+                        </span>
+                    </div>
+                `}).join('');
+            }
+
+            if (meusLista && usuarioLogado) {
+                const meus = relatos.filter(r => r.usuario_id === usuarioLogado.id);
+                if (meus.length === 0) meusLista.innerHTML = '<div class="empty-state">Você ainda não fez nenhum relato.</div>';
+                else meusLista.innerHTML = meus.map(r => `
+                    <div class="relato-item ${r.status} ${r.anonimo ? 'anonimo' : ''}">
+                        <div class="relato-conteudo">
+                            <h4>${r.categoria} ${r.anonimo ? '🕵️ Anônimo' : '👤 Público'}</h4>
+                            <p>${(r.descricao_filtrada || r.descricao).substring(0, 100)}...</p>
+                            <div class="relato-meta">📍 ${r.bairro} • 📅 ${new Date(r.data).toLocaleDateString('pt-BR')}</div>
+                            ${r.motivo_rejeicao ? `<p style="color: var(--secondary); font-size: 0.8rem;">⚠️ ${r.motivo_rejeicao}</p>` : ''}
+                        </div>
+                        <span class="status-badge">${r.status === 'pendente' ? 'Pendente' : r.status === 'andamento' ? 'Em Andamento' : r.status === 'rejeitado' ? 'Rejeitado' : 'Resolvido'}</span>
+                    </div>
+                `).join('');
+            }
+
+            if (recentesLista) {
+                const recentes = relatos.filter(r => r.status !== 'rejeitado').slice(-3).reverse();
+                if (recentes.length === 0) recentesLista.innerHTML = '<div class="empty-state">Nenhum relato recente.</div>';
+                else recentesLista.innerHTML = recentes.map(r => `
+                    <div class="relato-item ${r.status}">
+                        <div class="relato-conteudo">
+                            <h4>${r.categoria} ${r.anonimo ? '🕵️' : ''}</h4>
+                            <p>${(r.descricao_filtrada || r.descricao).substring(0, 100)}...</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            if (anonimosLista) {
+                const anonimos = relatos.filter(r => r.anonimo && r.status !== 'rejeitado').slice(-3).reverse();
+                if (anonimos.length === 0) anonimosLista.innerHTML = '<div class="empty-state">Nenhum relato anônimo.</div>';
+                else anonimosLista.innerHTML = anonimos.map(r => `
+                    <div class="relato-item anonimo">
+                        <div class="relato-conteudo">
+                            <h4>${r.categoria} 🕵️</h4>
+                            <p>${(r.descricao_filtrada || r.descricao).substring(0, 100)}...</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            if (rankingLista) {
+                const bairrosMap = {};
+                relatos.filter(r => r.status !== 'rejeitado').forEach(r => bairrosMap[r.bairro] = (bairrosMap[r.bairro] || 0) + 1);
+                const ranking = Object.entries(bairrosMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
+                if (ranking.length === 0) rankingLista.innerHTML = '<div class="empty-state">Nenhum dado disponível.</div>';
+                else rankingLista.innerHTML = ranking.map(([bairro, total], i) => `
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--gray-50); border-radius: 8px; margin-bottom: 8px;">
+                        <span style="width: 28px; height: 28px; background: ${i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : '#cd7f32'}; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">${i + 1}</span>
+                        <span><strong>${bairro}</strong> - ${total} relatos</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function filtrarRelatos(filtro) {
+            const lista = document.getElementById('relatos-lista-completa');
+            if (!lista) return;
+            let filtrados = [...relatos].reverse();
+            if (filtro !== 'todos') filtrados = filtrados.filter(r => r.status === filtro);
+            if (filtrados.length === 0) lista.innerHTML = '<div class="empty-state">Nenhum relato encontrado.</div>';
+            else lista.innerHTML = filtrados.map(r => {
+                const tipoRelato = r.anonimo ? '🕵️ Anônimo' : '👤 Público';
+                return `
+                <div class="relato-item ${r.status} ${r.anonimo ? 'anonimo' : ''}">
+                    <div class="relato-conteudo">
+                        <h4>${r.categoria} <span class="badge-relato ${r.anonimo ? 'badge-anonimo' : 'badge-publico'}">${tipoRelato}</span></h4>
+                        <div class="relato-meta">📍 ${r.endereco} • 🏘️ ${r.bairro} • 📅 ${new Date(r.data).toLocaleDateString('pt-BR')}</div>
+                        <p>${r.descricao_filtrada || r.descricao}</p>
+                        ${r.motivo_rejeicao ? `<p style="color: var(--secondary); font-size: 0.8rem;">⚠️ ${r.motivo_rejeicao}</p>` : ''}
+                    </div>
+                    <span class="status-badge">${r.status === 'pendente' ? 'Pendente' : r.status === 'andamento' ? 'Em Andamento' : r.status === 'rejeitado' ? 'Rejeitado' : 'Resolvido'}</span>
+                </div>
+            `}).join('');
+            document.querySelectorAll('.filter-group .filter-btn').forEach(btn => btn.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
+        }
+
+        function atualizarEstatisticas() {
+            const total = relatos.length;
+            const resolvidos = relatos.filter(r => r.status === 'resolvido').length;
+            const anonimos = relatos.filter(r => r.anonimo).length;
+            const pendentes = relatos.filter(r => r.status === 'pendente').length;
+            const andamento = relatos.filter(r => r.status === 'andamento').length;
+            const taxa = total > 0 ? Math.round((resolvidos / total) * 100) : 0;
+            
+            document.getElementById('total-relatos').textContent = total;
+            document.getElementById('resolvidos-contador').textContent = resolvidos;
+            document.getElementById('anonimos-contador').textContent = anonimos;
+            document.getElementById('taxa-sucesso').textContent = taxa + '%';
+            
+            if (document.getElementById('total-relatos-page')) {
+                document.getElementById('total-relatos-page').textContent = total;
+                document.getElementById('pendentes-page').textContent = pendentes;
+                document.getElementById('andamento-page').textContent = andamento;
+                document.getElementById('resolvidos-page').textContent = resolvidos;
+            }
+        }
+
+        function mostrarPagina(pagina) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pagina + '-page').classList.add('active');
+            const hero = document.querySelector('.hero');
+            if (hero) hero.style.display = pagina === 'inicial' ? 'block' : 'none';
+        }
+
+        function mostrarModalLogin() { document.getElementById('modal-login').classList.add('active'); }
+        function mostrarModalCadastro() { document.getElementById('modal-cadastro').classList.add('active'); }
+        function mostrarModalRelato() { 
+            if (!usuarioLogado) {
+                mostrarToast('⚠️ Faça login para fazer um relato identificado!', 'warning');
+                mostrarModalLogin();
+                return;
+            }
+            document.getElementById('modal-relato').classList.add('active'); 
+        }
+        function mostrarModalRelatoAnonimo() { document.getElementById('modal-relato-anonimo').classList.add('active'); }
+        function fecharModal(modalId) { 
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.remove('active');
+        }
+
+        function mudarAba(aba) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
+            document.getElementById('inicial-noticias-section').style.display = aba === 'noticias' ? 'block' : 'none';
+            document.getElementById('inicial-relatos-section').style.display = aba === 'relatos' ? 'block' : 'none';
+            document.getElementById('inicial-ranking-section').style.display = aba === 'ranking' ? 'block' : 'none';
+            document.getElementById('inicial-anonimos-section').style.display = aba === 'anonimos' ? 'block' : 'none';
+        }
+
+        function buscarRelatos() {
+            const termo = document.getElementById('search-input').value;
+            if (termo) { mostrarPagina('relatos'); addBotMessage(`🔍 Buscando: ${termo}`, 'bot'); }
+        }
+
+        function abrirNoticia(titulo) { addBotMessage(`📰 ${titulo}`, 'bot'); }
+
+        function renderizarCategorias() {
+            const grid = document.getElementById('categorias-lista');
+            if (grid) grid.innerHTML = categoriasRelato.map(cat => `
+                <div class="categoria-card" onclick="mostrarModalRelato()">
+                    <div class="categoria-emoji">${cat.icone}</div>
+                    <div class="categoria-titulo">${cat.nome}</div>
+                    <div class="categoria-desc">${cat.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderizarNoticias() {
+            const lista = document.getElementById('noticias-lista');
+            const listaPage = document.getElementById('noticias-page-lista');
+            const html = noticiasSimuladas.map(n => `
+                <div class="noticia-card" onclick="abrirNoticia('${n.titulo}')">
+                    <div class="noticia-imagem" style="background-image: url('${n.imagem}');">
+                        <span class="noticia-categoria">${n.categoria}</span>
+                    </div>
+                    <div class="noticia-conteudo">
+                        <h3 class="noticia-titulo">${n.titulo}</h3>
+                        <div class="noticia-meta">📅 ${n.data}</div>
+                        <p class="noticia-resumo">${n.resumo}</p>
+                    </div>
+                </div>
+            `).join('');
+            if (lista) lista.innerHTML = html;
+            if (listaPage) listaPage.innerHTML = html;
+        }
+
+        function initMap() {
+            map = L.map('map').setView([-9.0654, -68.6571], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            L.marker([-9.0654, -68.6571]).addTo(map).bindPopup('Sena Madureira - AC');
+        }
+
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    map.setView([pos.coords.latitude, pos.coords.longitude], 15);
+                    L.marker([pos.coords.latitude, pos.coords.longitude]).addTo(map).bindPopup('Sua localização').openPopup();
+                });
+            } else alert('Geolocalização não suportada');
+        }
+
+        // ========== ACESSIBILIDADE ==========
+        function toggleHighContrast() { document.body.classList.toggle('high-contrast'); }
+        function toggleLargeText() { document.body.classList.toggle('large-text'); }
+        function toggleSpacing() { document.body.classList.toggle('increased-spacing'); }
+        function toggleDyslexiaFont() { document.body.classList.toggle('dyslexia-friendly'); }
+        function toggleReadingGuide() { document.getElementById('readingGuide').classList.toggle('active'); }
+        function toggleAnimations() { document.body.classList.toggle('no-animations'); }
+        function resetAccessibility() {
+            document.body.classList.remove('high-contrast', 'large-text', 'increased-spacing', 'dyslexia-friendly', 'no-animations');
+            document.getElementById('readingGuide').classList.remove('active');
+        }
+
+        // ========== VOZ ==========
+        let recognition, isListening = false;
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.lang = 'pt-BR';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.onstart = () => { isListening = true; document.getElementById('voiceStatus').textContent = '🎤 Ouvindo... Fale agora'; document.getElementById('voiceStartBtn').style.background = '#e63946'; };
+                recognition.onend = () => { isListening = false; document.getElementById('voiceStatus').textContent = '🎤 Clique para falar com o assistente'; document.getElementById('voiceStartBtn').style.background = 'var(--primary)'; };
+                recognition.onresult = (e) => { const texto = e.results[0][0].transcript; document.getElementById('botInput').value = texto; sendMessage(); };
+                recognition.onerror = () => { document.getElementById('voiceStatus').textContent = '🎤 Erro, tente novamente'; isListening = false; document.getElementById('voiceStartBtn').style.background = 'var(--primary)'; };
+            } else { document.getElementById('voiceStatus').textContent = '🎤 Voz não suportada'; }
+        }
+        function startVoiceRecognition() { if (recognition) { if (isListening) recognition.stop(); else recognition.start(); } else alert('Seu navegador não suporta reconhecimento de voz.'); }
+        function speakText() { const text = prompt('Digite o texto que deseja ouvir:'); if (text && text.trim()) { const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'pt-BR'; utterance.rate = 0.9; window.speechSynthesis.speak(utterance); } }
+        function stopSpeaking() { window.speechSynthesis.cancel(); }
+
+        // ========== BOT CHAT ==========
+        async function sendMessage() {
+            const input = document.getElementById('botInput');
+            const text = input.value.trim();
+            if (!text) return;
+            addBotMessage(text, 'user');
+            input.value = '';
+            
+            let resposta = '';
+            const lower = text.toLowerCase();
+            if (lower.includes('relato') || lower.includes('denunciar')) resposta = `📝 Para fazer um relato, clique em "Novo Relato" (identificado) ou "Anônimo" (sem identificação). Todos os relatos passam por análise de linguagem e verificação de duplicidade ANTES de serem publicados.`;
+            else if (lower.includes('palavrão') || lower.includes('xingamento') || lower.includes('palavrao')) resposta = `🚫 O sistema rejeita automaticamente relatos com palavras ofensivas. Você receberá uma mensagem imediata e o relato não será publicado. Mantenha um tom respeitoso!`;
+            else if (lower.includes('rejeitado') || lower.includes('rejeitados')) resposta = `⚠️ Relatos podem ser rejeitados por: linguagem ofensiva ou duplicidade. A rejeição é imediata, antes da publicação. Verifique os motivos no detalhe do relato.`;
+            else if (lower.includes('cadastro') || lower.includes('registrar')) resposta = `📝 Para se cadastrar, clique no botão "Cadastrar" no menu superior. Você precisará informar: nome completo, CPF, e-mail, telefone e criar uma senha.`;
+            else if (lower.includes('meus relatos')) resposta = usuarioLogado ? `📋 Acesse "Meus Relatos" no menu para ver todos os seus relatos.` : `🔐 Faça login primeiro para ver seus relatos pessoais.`;
+            else if (lower.includes('estatística') || lower.includes('dados')) { const total = relatos.length; const resolvidos = relatos.filter(r => r.status === 'resolvido').length; const rejeitados = relatos.filter(r => r.status === 'rejeitado').length; resposta = `📊 Estatísticas: ${total} relatos no total, ${resolvidos} resolvidos, ${rejeitados} rejeitados. Taxa de solução: ${total > 0 ? Math.round(resolvidos/total*100) : 0}%.`; }
+            else if (lower.includes('qr') || lower.includes('qrcode')) resposta = `📱 Na página inicial você encontra um QR Code para acessar o site pelo celular. Basta escanear com a câmera!`;
+            else if (lower.includes('versão') || lower.includes('desktop') || lower.includes('mobile')) resposta = `💻 Você pode alternar entre as versões Desktop e Mobile usando os botões no topo da página.`;
+            else if (lower.includes('anonimo') || lower.includes('anônimo')) resposta = `🕵️ O relato anônimo não requer login e não solicita nenhum dado pessoal. Já o relato identificado exige que você esteja logado.`;
+            else if (lower.includes('ajuda')) resposta = `🤖 Comandos disponíveis: "relato", "palavrão", "rejeitado", "cadastro", "meus relatos", "estatística", "qr", "versão", "anonimo", "ajuda".`;
+            else resposta = `Olá! Sou o assistente do Participa Sena. Você pode fazer relatos identificados (logado) ou anônimos (sem login). Todos são analisados ANTES da publicação. Digite "ajuda" para comandos.`;
+            
+            setTimeout(() => addBotMessage(resposta, 'bot'), 300);
+        }
+
+        function addBotMessage(text, sender) {
+            const messagesDiv = document.getElementById('botMessages');
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `<div class="message-content">${text.replace(/\n/g, '<br>')}<div style="font-size: 0.7rem; opacity: 0.6; margin-top: 4px;">${time}</div></div>`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function toggleBot() {
+            const chat = document.getElementById('botChat');
+            chat.classList.toggle('minimized');
+            if (!chat.classList.contains('minimized') && document.getElementById('botMessages').children.length === 0) {
+                addBotMessage("👋 Olá! Agora você tem duas opções: relato identificado (com login) ou anônimo (sem login). Todos os relatos são analisados ANTES da publicação. Como posso ajudar?", "bot");
+            }
+        }
+
+        // ========== MASKS ==========
+        document.getElementById('cadastro-cpf')?.addEventListener('input', function(e) {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length <= 11) { v = v.replace(/(\d{3})(\d)/, '$1.$2'); v = v.replace(/(\d{3})(\d)/, '$1.$2'); v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2'); e.target.value = v; }
+        });
+        document.getElementById('cadastro-telefone')?.addEventListener('input', function(e) {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length <= 11) { v = v.replace(/(\d{2})(\d)/, '($1) $2'); v = v.replace(/(\d{5})(\d)/, '$1-$2'); e.target.value = v; }
+        });
+
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+        });
+
+        function initVLibras() { try { new window.VLibras.Widget('https://vlibras.gov.br/app'); } catch(e) {} }
+
+        // ========== INICIALIZAÇÃO ==========
+        carregarDados();
+        renderizarCategorias();
+        renderizarNoticias();
+        initMap();
+        initSpeechRecognition();
+        initVLibras();
+        carregarPreferenciaVersao();
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', gerarQRCode);
+        } else {
+            setTimeout(gerarQRCode, 500);
+        }
+
+        // ========== EXPOR FUNÇÕES GLOBAIS ==========
+        window.mostrarPagina = mostrarPagina;
+        window.mostrarModalLogin = mostrarModalLogin;
+        window.mostrarModalCadastro = mostrarModalCadastro;
+        window.mostrarModalRelato = mostrarModalRelato;
+        window.mostrarModalRelatoAnonimo = mostrarModalRelatoAnonimo;
+        window.fecharModal = fecharModal;
+        window.logout = logout;
+        window.filtrarRelatos = filtrarRelatos;
+        window.mudarAba = mudarAba;
+        window.buscarRelatos = buscarRelatos;
+        window.abrirNoticia = abrirNoticia;
+        window.getUserLocation = getUserLocation;
+        window.toggleHighContrast = toggleHighContrast;
+        window.toggleLargeText = toggleLargeText;
+        window.toggleSpacing = toggleSpacing;
+        window.toggleDyslexiaFont = toggleDyslexiaFont;
+        window.toggleReadingGuide = toggleReadingGuide;
+        window.toggleAnimations = toggleAnimations;
+        window.resetAccessibility = resetAccessibility;
+        window.startVoiceRecognition = startVoiceRecognition;
+        window.speakText = speakText;
+        window.stopSpeaking = stopSpeaking;
+        window.sendMessage = sendMessage;
+        window.toggleBot = toggleBot;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.mostrarPaginaMobile = mostrarPaginaMobile;
+        window.setVersion = setVersion;
+        window.copiarUrl = copiarUrl;
+        window.compartilharWhatsApp = compartilharWhatsApp;
+        window.compartilharTelegram = compartilharTelegram;
+        window.compartilharEmail = compartilharEmail;
+        window.addBotMessage = addBotMessage;
+        window.registrarRelato = registrarRelato;
+        window.mostrarToast = mostrarToast;
+        window.fecharToast = fecharToast;
+
+        setTimeout(() => addBotMessage("👋 Olá! Agora você pode fazer relatos identificados (com login) ou anônimos (sem login). Todos são analisados ANTES da publicação. Digite 'ajuda' para comandos.", "bot"), 1500);
+    </script>
+</body>
+</html>
